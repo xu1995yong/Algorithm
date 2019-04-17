@@ -1,4 +1,47 @@
-## 392. 打劫房屋
+## 爬楼梯
+```java
+public int climbStairs(int n) {
+	int[] dp = new int[n + 1];
+
+	for (int i = 0; i <= n; i++) {
+		if (i < 3) {
+			dp[i] = i;
+		} else {
+			dp[i] = dp[i - 1] + dp[i - 2];
+		}
+	}
+	return dp[n];
+}
+```
+
+## 买卖股票的最佳时机
+```java
+public int maxProfit(int[] prices) {
+    int profit = 0;
+    int min = Integer.MAX_VALUE;
+    for (int i = 0; i < prices.length; i++) {
+        min = prices[i] < min ? prices[i] : min;
+        profit = prices[i] - min > profit ? prices[i] - min : profit;
+    }
+    return profit;
+}
+```
+## 买卖股票的最佳时机Ⅱ
+```java
+public int maxProfit(int[] prices) {
+    int profit = 0;
+    for (int i = 0; i < prices.length - 1; i++) {
+        int diff = prices[i+1] - prices[i];
+        if (diff > 0) {
+            profit += diff;
+        }
+    }
+    return profit;
+}
+```
+
+## 打劫房屋
+
 假设你是一个专业的窃贼，准备沿着一条街打劫房屋。每个房子都存放着特定金额的钱。你面临的唯一约束条件是：相邻的房子装着相互联系的防盗系统，且 当相邻的两个房子同一天被打劫时，该系统会自动报警。
 
 给定一个非负整数列表，表示每个房子中存放的钱， 算一算，如果今晚去打劫，你最多可以得到多少钱 在不触动报警装置的情况下。
@@ -21,9 +64,7 @@ public long houseRobber(int[] A) {
 }
 ```
 
-
-
-## 534. 打劫房屋 II
+## 打劫房屋 II
 在上次打劫完一条街道之后，窃贼又发现了一个新的可以打劫的地方，但这次所有的房子围成了一个圈，这就意味着第一间房子和最后一间房子是挨着的。每个房子都存放着特定金额的钱。你面临的唯一约束条件是：相邻的房子装着相互联系的防盗系统，且 当相邻的两个房子同一天被打劫时，该系统会自动报警。
 
 给定一个非负整数列表，表示每个房子中存放的钱， 算一算，如果今晚去打劫，你最多可以得到多少钱 在不触动报警装置的情况下。

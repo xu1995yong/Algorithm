@@ -48,6 +48,7 @@
 ## 5. 第k大元素
 
 ```java
+//方法一：依旧借助快排的思想，只不过每次只选择一边的子序列进行划分。每次选定基准之后，比基准值大的都在左边子序列，小的在右边子序列，所以只要将k与当前基准所在下标进行比较（基准下标index即为第index大的数），确认下次对哪半边子序列进行操作。
 private int quicksort(int[] nums, int left, int right, int k) {
     int pivot = nums[left];
     int i = left, j = right;
@@ -77,38 +78,62 @@ private int quicksort(int[] nums, int left, int right, int k) {
 public int kthLargestElement(int k, int[] nums) {
     return quicksort(nums, 0, nums.length-1, k);
 }
+//方法二
+class KthLargest {
+    final PriorityQueue<Integer> q ;
+    final int k;
+    public KthLargest(int k, int[] nums) {
+        this.k = k;
+        q = new PriorityQueue<Integer>(k);
+        for(int i: nums) {
+            add(i);
+        }
+    }
+
+    public int add(int val) {
+        if(q.size() < k) {
+            q.offer(val);
+
+        }
+        else if(q.peek() < val) {
+            q.poll();
+            q.offer(val);
+        }
+        return q.peek();
+    }
+}
 ```
 
 ## 6. 合并排序数组 II
 
-	public int[] mergeSortedArray(int[] A, int[] B) {
-	    int arrLen = A.length + B.length;
-	    int[] arr = new int[arrLen];
-	    int i = 0;
-	    int j = 0;
-	    int k = 0;
-	    while (k < arrLen) {
-	        if (i >= A.length) {
-	            arr[k] = B[j];
-	            j++;
-	        } else if (j >= B.length) {
-	            arr[k] = A[i];
-	            i++;
-	        } else {
-	            if (A[i] > B[j]) {
-	                arr[k] = B[j];
-	                j++;
-	            } else {
-	                arr[k] = A[i];
-	                i++;
-	            }
-	        }
-	        k++;
-	    }
-	    return arr;
-	}
-
-## 7.二叉树的序列化和反序列化 PASS
+```java
+public int[] mergeSortedArray(int[] A, int[] B) {
+    int arrLen = A.length + B.length;
+    int[] arr = new int[arrLen];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while (k < arrLen) {
+        if (i >= A.length) {
+            arr[k] = B[j];
+            j++;
+        } else if (j >= B.length) {
+            arr[k] = A[i];
+            i++;
+        } else {
+            if (A[i] > B[j]) {
+                arr[k] = B[j];
+                j++;
+            } else {
+                arr[k] = A[i];
+                i++;
+            }
+        }
+        k++;
+   }
+    return arr;
+}
+```
 
 ## 8. 旋转字符串
 ```java
@@ -746,26 +771,28 @@ public int majorityNumber(List<Integer> nums) {
 
 ## 48.
 ## 49.字符大小写排序
-	public void sortLetters(char[] chars) {
-		int i = 0;
-		int j = chars.length - 1;
-		while (i <= j) {
-			while (i <= j && Character.isLowerCase(chars[i])){
-				i++;
-			}
-			while (i <= j && Character.isUpperCase(chars[j])){
-				j--;
-			}
-			if (i <= j) {
-				char tmp = chars[i];
-				chars[i] = chars[j];
-				chars[j] = tmp;
-				i++;
-				j--;
-			}
+```java
+public void sortLetters(char[] chars) {
+	int i = 0;
+	int j = chars.length - 1;
+	while (i <= j) {
+		while (i <= j && Character.isLowerCase(chars[i])){
+			i++;
 		}
-		return;
+		while (i <= j && Character.isUpperCase(chars[j])){
+			j--;
+		}
+		if (i <= j) {
+			char tmp = chars[i];
+			chars[i] = chars[j];
+			chars[j] = tmp;
+			i++;
+			j--;
+		}
 	}
+	return;
+}
+```
 ## 50.PASS
 ## 51.上一个排列
 	//字典序法
@@ -1069,35 +1096,7 @@ public int search(int[] A, int target) {
 ## 63. 搜索旋转排序数组 II PASS
 ## 64. PASS
 
-## 69.给出一棵二叉树，返回其节点值的逐层遍历
 
-```java
-public List<List<Integer>> levelOrder(TreeNode root) {
-    List<List<Integer>> ret = new ArrayList<List<Integer>>();
-    if (root == null)
-        return ret;
-    Queue<TreeNode> queue = new LinkedList<TreeNode>();
-    queue.add(root);
-
-    while (queue.size() != 0) {
-        List list = new ArrayList();
-        int count = queue.size();
-        while (count != 0) {
-            TreeNode node = queue.poll();
-            list.add(node.val);
-            count--;
-            if (node.left != null) {
-                queue.add(node.left);
-            }
-            if (node.right != null) {
-                queue.add(node.right);
-            }
-        }
-        ret.add(list);
-    }
-    return ret;
-}
-```
 
 ## 72. 中序遍历和后序遍历树构造二叉树
 ```java
@@ -1288,28 +1287,30 @@ public int longestCommonSubstring(String A, String B) {
 }
 ```
 ## 81.数据流的中位数
-	public int[] medianII(int[] nums) {
-		if (nums == null || nums.length == 0) {
-			return new int[0];
-		}
-		PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder()); // left
-		PriorityQueue<Integer> minHeap = new PriorityQueue<>();
-		int[] result = new int[nums.length];
-		for (int i = 0; i < nums.length; i++) {
-			addNums(maxHeap, minHeap, nums[i]);
-			result[i] = maxHeap.peek();
-		}
-		return result;
-	}
-	
-	private void addNums(PriorityQueue<Integer> maxHeap, PriorityQueue<Integer> minHeap, int num) {
-		maxHeap.offer(num); // 1.新加入的元素先入到大根堆，由大根堆筛选出堆中最大的元素
-		minHeap.offer(maxHeap.poll()); // 2.筛选后的【大根堆中的最大元素】进入小根堆
-		if (minHeap.size() - maxHeap.size() > 0) {
-			System.out.println(minHeap.peek());
-			maxHeap.offer(minHeap.poll());
-		}
-	}
+```java
+public int[] medianII(int[] nums) {
+    if (nums == null || nums.length == 0) {
+        return new int[0];
+    }
+    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder()); // left
+    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+    int[] result = new int[nums.length];
+    for (int i = 0; i < nums.length; i++) {
+        addNums(maxHeap, minHeap, nums[i]);
+        result[i] = maxHeap.peek();
+    }
+    return result;
+}
+
+private void addNums(PriorityQueue<Integer> maxHeap, PriorityQueue<Integer> minHeap, int num) {
+    maxHeap.offer(num); // 1.新加入的元素先入到大根堆，由大根堆筛选出堆中最大的元素
+    minHeap.offer(maxHeap.poll()); // 2.筛选后的【大根堆中的最大元素】进入小根堆
+    if (minHeap.size() - maxHeap.size() > 0) {
+        System.out.println(minHeap.peek());
+        maxHeap.offer(minHeap.poll());
+    }
+}
+```
 ## 82. 落单的数
 	方法一：
 	public int singleNumber(int[] A) {
@@ -1483,49 +1484,6 @@ public TreeNode insertNode(TreeNode root, TreeNode node) {
 	}
 
 
-## 96. 链表划分
-	//用两个链表表示，分别存储小于x的节点和大于等于x的节点
-
-## 97. 求二叉树的最大深度
-
-```java
-//方法一：递归
-public int maxDepth(TreeNode root) {
-    if (root == null)
-        return 0;
-
-    int leftDepth = maxDepth(root.left);
-    int rightDepth = maxDepth(root.right);
-
-    return (leftDepth > rightDepth) ? (leftDepth + 1) : (rightDepth + 1);
-}
-
-//方法二：层次遍历法
-public int maxDepth(TreeNode root) {
-    int maxDepth = 0;
-    if (root == null)
-        return maxDepth;
-    Queue<TreeNode> queue = new LinkedList<TreeNode>();
-    queue.add(root);
-
-    while (queue.size() != 0) {
-        maxDepth++;
-        int count = queue.size();
-        while (count != 0) {
-            TreeNode node = queue.poll();
-            count--;
-            if (node.left != null) {
-                queue.add(node.left);
-            }
-            if (node.right != null) {
-                queue.add(node.right);
-            }
-        }
-
-    }
-    return maxDepth;
-}
-```
 
 ## 98.链表排序
 ```java
@@ -1767,21 +1725,7 @@ public ListNode mergeKLists(List<ListNode> lists) {
     return dummy.next;
 }
 ```
-## 111. 爬楼梯
-```java
-public int climbStairs(int n) {
-	int[] dp = new int[n + 1];
 
-	for (int i = 0; i <= n; i++) {
-		if (i < 3) {
-			dp[i] = i;
-		} else {
-			dp[i] = dp[i - 1] + dp[i - 2];
-		}
-	}
-	return dp[n];
-}
-```
 ## 112. 删除排序链表中的重复元素
 	public ListNode deleteDuplicates(ListNode head) {
 		if (head == null)
@@ -1806,83 +1750,89 @@ public int climbStairs(int n) {
 		return head;
 	}
 ## 114. 不同的路径
-	public int uniquePaths(int m, int n) {
-		if (m == 0 || n == 0) {
-			return 1;
-		}
-		// 数组中存储到达第i行第j列的可能的路径数量和
-		int[][] sum = new int[m][n];
-		// 第一行和第一列的所有值都是1，因为到达这些位置只可能有一条路径
-		for (int i = 0; i < m; i++) {
-			sum[i][0] = 1;
-		}
-		for (int i = 0; i < n; i++) {
-			sum[0][i] = 1;
-		}
-		// 到达网格的i行j列可能的路径为到达i-1行，j列的路径数加上到达i行，j-1列的路径数，因为机器人只有这两条途径能到达目的地[i][j]。
-		for (int i = 1; i < m; i++) {
-			for (int j = 1; j < n; j++) {
-				sum[i][j] = sum[i - 1][j] + sum[i][j - 1];
-			}
-		}
-		return sum[m - 1][n - 1];
+```java
+public int uniquePaths(int m, int n) {
+	if (m == 0 || n == 0) {
+		return 1;
 	}
+	// 数组中存储到达第i行第j列的可能的路径数量和
+	int[][] sum = new int[m][n];
+	// 第一行和第一列的所有值都是1，因为到达这些位置只可能有一条路径
+	for (int i = 0; i < m; i++) {
+		sum[i][0] = 1;
+	}
+	for (int i = 0; i < n; i++) {
+		sum[0][i] = 1;
+	}
+	// 到达网格的i行j列可能的路径为到达i-1行，j列的路径数加上到达i行，j-1列的路径数，因为机器人只有这两条途径能到达目的地[i][j]。
+	for (int i = 1; i < m; i++) {
+		for (int j = 1; j < n; j++) {
+			sum[i][j] = sum[i - 1][j] + sum[i][j - 1];
+		}
+	}
+	return sum[m - 1][n - 1];
+}
+```
 ## 115.不同的路径 II
-	public int uniquePathsWithObstacles(int[][] obstacleGrid) {
-		if (obstacleGrid == null || obstacleGrid.length == 0 || obstacleGrid[0].length == 0) {
-			return 1;
-		}
-		int m = obstacleGrid.length;
-		int n = obstacleGrid[0].length;
-		int[][] sum = new int[m][n];
-		for (int i = 0; i < m; i++) {
-			// 遇到障碍，下面的都走不通了
-			if (obstacleGrid[i][0] == 1) {
-				break;
-			}
-			sum[i][0] = 1;
-		}
-		for (int i = 0; i < n; i++) {
-			if (obstacleGrid[0][i] == 1) {
-				break;
-			}
-			sum[0][i] = 1;
-		}
-		for (int i = 1; i < m; i++) {
-			for (int j = 1; j < n; j++) {
-				if (obstacleGrid[i][j] != 1) {
-					sum[i][j] = sum[i - 1][j] + sum[i][j - 1];
-				} else {
-					sum[i][j] = 0;
-				}
-			}
-		}
-		return sum[m - 1][n - 1];
-	}
+```java
+public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+    if (obstacleGrid == null || obstacleGrid.length == 0 || obstacleGrid[0].length == 0) {
+        return 1;
+    }
+    int m = obstacleGrid.length;
+    int n = obstacleGrid[0].length;
+    int[][] sum = new int[m][n];
+    for (int i = 0; i < m; i++) {
+        // 遇到障碍，下面的都走不通了
+        if (obstacleGrid[i][0] == 1) {
+            break;
+        }
+        sum[i][0] = 1;
+    }
+    for (int i = 0; i < n; i++) {
+        if (obstacleGrid[0][i] == 1) {
+            break;
+        }
+        sum[0][i] = 1;
+    }
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            if (obstacleGrid[i][j] != 1) {
+                sum[i][j] = sum[i - 1][j] + sum[i][j - 1];
+            } else {
+                sum[i][j] = 0;
+            }
+        }
+    }
+    return sum[m - 1][n - 1];
+}
+```
 ## 117. 跳跃游戏 II
-	public int jump(int[] A) {
-		if (A.length <= 1) {
-			return 0;
-		}
-		int step = 0;
-		int index = 0;
-		int i = 0;
-		while (i < A.length) {
-			if (i + A[i] >= A.length - 1) {
-				return step + 1;
-			}
-			int max = -1;
-			for (int j = i + 1; j <= i + A[i]; j++) {
-				if (max < j + A[j]) {
-					max = j + A[j];
-					index = j;
-				}
-			}
-			step++;
-			i = index;
-		}
-		return step;
-	}
+```java
+public int jump(int[] A) {
+    if (A.length <= 1) {
+        return 0;
+    }
+    int step = 0;
+    int index = 0;
+    int i = 0;
+    while (i < A.length) {
+        if (i + A[i] >= A.length - 1) {
+            return step + 1;
+        }
+        int max = -1;
+        for (int j = i + 1; j <= i + A[i]; j++) {
+            if (max < j + A[j]) {
+                max = j + A[j];
+                index = j;
+            }
+        }
+        step++;
+        i = index;
+    }
+    return step;
+}
+```
 ## 120. 单词接龙
 	public boolean connect(String word1, String word2) {
 		int count = 0;
@@ -2094,40 +2044,42 @@ public int climbStairs(int n) {
 		}
 	}
 ## 136.分割回文串
-	public List<List<String>> partition(String s) {
-		List<List<String>> results = new ArrayList<>();
-		if (s == null || s.length() == 0) {
-			return results;
-		}
-		List<String> item = new ArrayList<String>();
-		dfs(s, 0, item, results);
-		return results;
-	}
-	
-	private void dfs(String s, int startIndex, List<String> item, List<List<String>> results) {
-		if (startIndex == s.length()) {
-			results.add(new ArrayList<String>(item));
-			return;
-		}
-		for (int i = startIndex; i < s.length(); i++) {
-			String subString = s.substring(startIndex, i + 1);
-			if (!isPalindrome(subString)) {
-				continue;
-			}
-			item.add(subString);
-			dfs(s, i + 1, item, results);
-			item.remove(item.size() - 1);
-		}
-	}
-	
-	private boolean isPalindrome(String s) {
-		for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
-			if (s.charAt(i) != s.charAt(j)) {
-				return false;
-			}
-		}
-		return true;
-	}
+```java
+public List<List<String>> partition(String s) {
+    List<List<String>> results = new ArrayList<>();
+    if (s == null || s.length() == 0) {
+        return results;
+    }
+    List<String> item = new ArrayList<String>();
+    dfs(s, 0, item, results);
+    return results;
+}
+
+private void dfs(String s, int startIndex, List<String> item, List<List<String>> results) {
+    if (startIndex == s.length()) {
+        results.add(new ArrayList<String>(item));
+        return;
+    }
+    for (int i = startIndex; i < s.length(); i++) {
+        String subString = s.substring(startIndex, i + 1);
+        if (!isPalindrome(subString)) {
+            continue;
+        }
+        item.add(subString);
+        dfs(s, i + 1, item, results);
+        item.remove(item.size() - 1);
+    }
+}
+
+private boolean isPalindrome(String s) {
+    for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
+        if (s.charAt(i) != s.charAt(j)) {
+            return false;
+        }
+    }
+    return true;
+}
+```
 ## 138. 子数组之和
 	public List<Integer> subarraySum(int[] nums) {
 		List<Integer> pos = new ArrayList<Integer>(2);
@@ -2255,27 +2207,7 @@ public int climbStairs(int n) {
 		A[i] = A[j];
 		A[j] = t;
 	}
-## 149. 买卖股票的最佳时机
-	public int maxProfit(int[] prices) {
-		int profit = 0;
-		int min = Integer.MAX_VALUE;
-		for (int i = 0; i < prices.length; i++) {
-			min = prices[i] < min ? prices[i] : min;
-			profit = prices[i] - min > profit ? prices[i] - min : profit;
-		}
-		return profit;
-	}
-## 150. 买卖股票的最佳时机Ⅱ
-	public int maxProfit(int[] prices) {
-	  int profit = 0;
-	    for (int i = 0; i < prices.length - 1; i++) {
-	        int diff = prices[i+1] - prices[i];
-	        if (diff > 0) {
-	            profit += diff;
-	        }
-	    }
-	    return profit;
-	}
+
 ## 152. 组合
 	public List<List<Integer>> combine(int n, int k) {
 		List<List<Integer>> result = new ArrayList<>();
@@ -2419,35 +2351,35 @@ public int findMin(int[] nums) {
 		return p1;
 	}
 ## 167.链表求和
-	public ListNode addLists(ListNode l1, ListNode l2) {
-		if (l1 == null) {
-			return l2;
-		} else if (l2 == null) {
-			return l1;
-		}
-		ListNode head = new ListNode(0);
-		ListNode p = head;
-		int num = 0;
-		while (l1 != null || l2 != null) {
-			if (l1 != null) {
-				num += l1.val;
-				l1 = l1.next;
-			}
-			if (l2 != null) {
-				num += l2.val;
-				l2 = l2.next;
-			}
-			p.next = new ListNode(num % 10);
-			num /= 10;
-			p = p.next;
-		}
-		while (num != 0) {
-			p.next = new ListNode(num % 10);
-			p = p.next;
-			num /= 10;
-		}
-		return head.next;
-	}
+
+给出两个 **非空** 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 **逆序** 的方式存储的，并且它们的每个节点只能存储 **一位** 数字。如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
+
+```java
+public ListNode addLists(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode p = dummy;
+    int num = 0;
+    while (l1 != null || l2 != null) {
+        if (l1 != null) {
+            num += l1.val;
+            l1 = l1.next;
+        }
+        if (l2 != null) {
+            num += l2.val;
+            l2 = l2.next;
+        }
+        p.next = new ListNode(num % 10);
+        num /= 10;
+        p = p.next;
+    }
+    while (num != 0) {
+        p.next = new ListNode(num % 10);
+        p = p.next;
+        num /= 10;
+    }
+    return dummy.next;
+}
+```
 ## 169. 汉诺塔
 	public List<String> towerOfHanoi(int n) {
 		List<String> list = new ArrayList();
@@ -2585,39 +2517,30 @@ public int findMin(int[] nums) {
 			return head;
 		}
 	}
-## 175. 翻转二叉树
-	public void invertBinaryTree(TreeNode root) {
-	    if (root == null) {
-	        return;
-	    }
-	    TreeNode temp = root.left;
-	    root.left = root.right;
-	    root.right = temp;
-	    
-	    invertBinaryTree(root.left);
-	    invertBinaryTree(root.right);
-	}
+
 ## 176 图中两个点之间的路线 PASS
 ## 177. 把排序数组转换为高度最小的二叉搜索树
-	public TreeNode sortedArrayToBST(int[] A) {
-		if (A == null || A.length == 0) {
-			return null;
-		}
-		TreeNode root = null;
-		root = recursion(A, 0, A.length - 1, root);
-		A = null;
-		return root;
+```java
+public TreeNode sortedArrayToBST(int[] A) {
+	if (A == null || A.length == 0) {
+		return null;
 	}
-	public TreeNode recursion(int[] nums, int left, int right, TreeNode root) {
-		if (left <= right) {
-			int mid = (left + right) / 2;
-			int val = nums[mid];
-			root = new TreeNode(val);
-			root.left = recursion(nums, left, mid - 1, root.left);
-			root.right = recursion(nums, mid + 1, right, root.right);
-		}
-		return root;
+	TreeNode root = null;
+	root = recursion(A, 0, A.length - 1, root);
+	A = null;
+	return root;
+}
+public TreeNode recursion(int[] nums, int left, int right, TreeNode root) {
+	if (left <= right) {
+		int mid = (left + right) / 2;
+		int val = nums[mid];
+		root = new TreeNode(val);
+		root.left = recursion(nums, left, mid - 1, root.left);
+		root.right = recursion(nums, mid + 1, right, root.right);
 	}
+	return root;
+}
+```
 ## 178. 图是否是树
 	public boolean validTree(int n, int[][] edges) {
 		if (n == 0) {
@@ -2758,85 +2681,32 @@ public int findMin(int[] nums) {
 	    TreeNode clone_root = new TreeNode(root.val);
 	    clone_root.left = cloneTree(root.left);
 	    clone_root.right = cloneTree(root.right);
-	    return clone_root;
+	    return clone_rot;
 	}
 
-## 376. 二叉树的路径和
+## 384. 最长无重复字符的子串
+
+给定一个字符串，请你找出其中不含有重复字符的 **最长子串** 的长度。
+
 ```java
-public List<List<Integer>> binaryTreePathSum(TreeNode root, int target) {
-    List<List<Integer>> result = new ArrayList();
-    if (root == null) {
-        return result;
+public int lengthOfLongestSubstring(String s) {
+    Map<Character, Integer> map = new HashMap<Character, Integer>();
+    int longest = -1;
+    for (int i = 0; i < s.length(); i++) {
+        char ch = s.charAt(i);
+        if (map.containsKey(ch)) {
+            longest = Math.max(map.size(), longest);
+            i = map.get(ch); //回退
+            map.clear();
+        } else {
+            map.put(ch, i);
+        }
     }
-    List<Integer> path = new ArrayList<>();
-    int sum = 0;
-    preOrder(root, target, sum, result, path);
-    return result;
-}
-
-public void preOrder(TreeNode node, int target, int sum, List<List<Integer>> result, List<Integer> path) {
-    if (node == null) {
-        return;
-    }
-    sum += node.val;
-    path.add(node.val);
-    if (node.left == null && node.right == null && sum == target) {
-        result.add(new ArrayList(path));  //一定要新new一个
-    }
-    preOrder(node.left, target, sum, result, path);
-    preOrder(node.right, target, sum, result, path);
-
-    sum -= node.val;
-    path.remove(path.size() - 1);
+    longest = Math.max(map.size(), longest);
+    return longest;
 }
 ```
-## 384. 最长无重复字符的子串
-	public int lengthOfLongestSubstring(String s) {
-		Map<Character, Integer> map = new HashMap<Character, Integer>();
-		if (s == null) {
-			return 0;
-		} else if (s.length() <= 1) {
-			return s.length();
-		}
-		int longest = -1;
-		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
-			if (map.containsKey(ch)) {
-				longest = Math.max(map.size(), longest);
-				i = map.get(ch);
-				map.clear();
-			} else {
-				map.put(ch, i);
-			}
-		}
-		longest = Math.max(map.size(), longest);
-		map.clear();
-		return longest;
-	}
-## 453.将二叉树拆成链表
-	public void flatten(TreeNode root) {
-		if (root == null) {
-			return;
-		}
-		Stack<TreeNode> stack = new Stack<>();
-		stack.push(root);
-		while (!stack.empty()) {
-			TreeNode node = stack.pop();
-			if (node.right != null) {
-				stack.push(node.right);
-			}
-			if (node.left != null) {
-				stack.push(node.left);
-			}
-			// connect
-			node.left = null;
-			if (stack.empty()) {
-				node.right = null;
-			} else {
-				node.right = stack.peek();
-			}
-		}
-	}
+
 ## 433. 岛屿的个数
 	public void DFS(boolean[][] grid, boolean[][] mark, int x, int y) {
 		mark[x][y] = true; // 标记已搜索的位置

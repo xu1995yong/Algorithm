@@ -64,6 +64,66 @@ public String removeKdigits(String num, int k) {
 }
 ```
 
+## 6. Z 字形变换
+
+将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
+比如输入字符串为 `"LEETCODEISHIRING"` 行数为 3 时，排列如下：
+
+```
+L   C   I   R
+E T O E S I I G
+E   D   H   N
+```
+之后，你的输出需要从左往右逐行读取，产生一个新的字符串，比如：`"LCIRETOESIIGEDHN"`
+
+```java
+public String convert(String s, int numRows) {
+    if (numRows == 1) return s;
+    List<StringBuilder> rows = new ArrayList<>();
+    for (int i = 0; i < Math.min(numRows, s.length()); i++) {
+        rows.add(new StringBuilder());
+    }
+
+    int curRow = 0;
+    boolean goingDown = false;
+    for (char c : s.toCharArray()) {//将每个字符添加到所属行的stringbuilder中
+        rows.get(curRow).append(c);
+        if (curRow == 0 || curRow == numRows - 1) {
+            goingDown = !goingDown;
+        }
+        curRow += goingDown ? 1 : -1;
+    }
+
+    StringBuilder ret = new StringBuilder();
+    for (StringBuilder row : rows) {
+        ret.append(row);
+    }
+    return ret.toString();
+}
+```
+
+## 11. 盛最多水的容器
+
+```java
+public int maxArea(int[] height) {
+//容器的盛水量取决于容器的底和容器较短的那条高。可见只有较短边会对盛水量造成影响，因此
+//移动较短边的指针，并比较当前盛水量和当前最大盛水量。直至左右指针相遇。可以证明，如果
+//移动较高的边，则盛水量只会变少；移动较低的边，则可以遍历到最大的情况。
+    int left = 0;
+    int right = height.length - 1;
+    int max = 0;
+    while (left < right) {
+        max = Math.max(max, Math.min(height[left], height[right]) * (right - left));
+        if (height[left] < height[right]) {
+            left++;
+        } else {
+            right--;
+        }
+    }
+    return max;
+}
+```
+
 
 
 ## 43. 
@@ -107,7 +167,33 @@ public String multiply(String num1, String num2) {
 }
 ```
 
+## 49. 字母异位词分组
 
+给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+
+```java
+public List<List<String>> groupAnagrams(String[] strs) {
+    Map<String, List> ans = new HashMap<>();
+    int[] count = new int[26];
+    for (String s : strs) {
+        Arrays.fill(count, 0);
+        for (char c : s.toCharArray()) {
+            count[c - 'a']++;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 26; i++) {
+            sb.append('#');
+            sb.append(count[i]);
+        }
+        String key = sb.toString();
+        if (!ans.containsKey(key)) {
+            ans.put(key, new ArrayList());
+        }
+        ans.get(key).add(s);
+    }
+    return new ArrayList(ans.values());
+}
+```
 
 ## 88.  合并两个有序数组
 
@@ -129,6 +215,69 @@ public void merge(int[] nums1, int m, int[] nums2, int n) {
         m++;
         j++;
     }
+}
+```
+
+## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
+
+```java
+public boolean canJump(int[] nums) {
+    int right = nums.length - 1;
+    int i = right;
+    while (i >= 0) {
+        if (nums[i] >= right - i) {    //如果当前下标可以跳转到right，就更新right的值
+            right = i;
+        }
+        i--;
+    }
+    if (right != 0) return false;    //当整个循环结束时，right没有到达0,说明不可抵达
+    return true;
+}
+```
+
+
+
+## 670. 最大交换
+
+```java
+public int maximumSwap(int num) {
+    char[] digits = Integer.toString(num).toCharArray();
+    if(digits.length == 1) return num;
+
+    // 寻找不符合非递增顺序的分界线
+    int split = 0;
+    for (int i = 0; i < digits.length-1; i++){
+        if (digits[i] < digits[i+1]){
+            split = i+1;
+            break;
+        }
+    }
+
+    // 在分界线后面的部分寻找最大的值max
+    char max = digits[split];
+    int index1 = split;
+    for (int j = split+1; j < digits.length; j++){
+        if (digits[j] >= max){
+            max = digits[j];
+            index1 = j;
+        }
+    }
+
+    // 在分界线前面的部分向前寻找小于max的最大值
+    int index2 = split;
+    for (int i = split-1; i >= 0; i--){
+        if (digits[i] >= max){
+            break;
+        }
+        index2--;
+    }
+
+    //交换两位找到的char
+    char temp = digits[index1];
+    digits[index1] = digits[index2];
+    digits[index2] = temp;
+
+    return Integer.valueOf(new String(digits));
 }
 ```
 
