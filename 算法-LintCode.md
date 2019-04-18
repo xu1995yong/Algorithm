@@ -882,7 +882,7 @@ public int[] twoSum(int[] nums, int target) {
             right--;
         }
         if (nums[left] + nums[right] < target) {
-            left++;
+            left++; 
         }
     }
     int[] ans = new int[2];
@@ -914,36 +914,72 @@ public int[] twoSum(int[] numbers, int target) {
 }
 ```
 
-## 57. 三数之和
-	public List<List<Integer>> threeSum(int[] numbers) {
-	    List<List<Integer>> result = new ArrayList<List<Integer>>();
-	    if (numbers == null || numbers.length < 3){
-	        return result;
-		}
-	    Arrays.sort(numbers);
-	    for (int i = 0; i < numbers.length; i++) {
-	        int left = i + 1;
-	        int right = numbers.length  1;
-	        while (left < right) {
-	            int sum = numbers[i] + numbers[left] + numbers[right];
-	            ArrayList<Integer> path = new ArrayList<Integer>();
-	            if (sum == 0) {
-	                path.add(numbers[i]);
-	                path.add(numbers[left]);
-	                path.add(numbers[right]);
-	                if (result.contains(path) == false)
-	                    result.add(path);
-	                left++;
-	                right;
-	            } else if (sum > 0) {
-	                right;
-	            } else {
-	                left++;
-	            }
-	        }
-	    }
-	    return result;
-	}
+## 两数之和 - BST版本
+
+```java
+public int[] twoSum(TreeNode root, int n) {
+    return helper(root, root, n);
+}
+private TreeNode search(TreeNode root, int val) {
+    if (root == null) return null;
+    if (val == root.val) return root;
+    if (val < root.val) return search(root.left, val);
+    return search(root.right, val);
+}
+private int[] helper(TreeNode root, TreeNode topRoot, int n) {
+    if (root == null) return null;
+
+    int ans[];
+    TreeNode another = search(topRoot, n - root.val);
+    if (another != null && another != root) {
+        ans = new int[2];
+        ans[0] = root.val;
+        ans[1] = n - root.val;
+        return ans;
+    }
+    ans = helper(root.left, topRoot, n);
+    if (ans != null) {
+        return ans;
+    }
+    return helper(root.right, topRoot, n);
+}
+```
+
+
+
+## 三数之和
+
+```java
+public List<List<Integer>> threeSum(int[] numbers) {
+    List<List<Integer>> result = new ArrayList<List<Integer>>();
+    if (numbers == null || numbers.length < 3){
+        return result;
+    }
+    Arrays.sort(numbers);
+    for (int i = 0; i < numbers.length; i++) {
+        int left = i + 1;
+        int right = numbers.length  1;
+        while (left < right) {
+            int sum = numbers[i] + numbers[left] + numbers[right];
+            ArrayList<Integer> path = new ArrayList<Integer>();
+            if (sum == 0) {
+                path.add(numbers[i]);
+                path.add(numbers[left]);
+                path.add(numbers[right]);
+                if (result.contains(path) == false)
+                    result.add(path);
+                left++;
+                right;
+            } else if (sum > 0) {
+                right;
+            } else {
+                left++;
+            }
+        }
+    }
+    return result;
+}
+```
 
 ## 58.
 
