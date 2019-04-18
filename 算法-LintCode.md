@@ -45,116 +45,8 @@
 	    return arr[n  1];
 	}
 
-## 5. 第k大元素
 
-```java
-//方法一：依旧借助快排的思想，只不过每次只选择一边的子序列进行划分。每次选定基准之后，比基准值大的都在左边子序列，小的在右边子序列，所以只要将k与当前基准所在下标进行比较（基准下标index即为第index大的数），确认下次对哪半边子序列进行操作。
-private int quicksort(int[] nums, int left, int right, int k) {
-    int pivot = nums[left];
-    int i = left, j = right;
-    while (i <= j) {
-        while (i <= j && nums[i] > pivot) {
-            i++;
-        }
-        while (i <= j && nums[j] < pivot) {
-            j--;
-        }
-        if (i <= j) {
-            int tmp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = tmp;
-            i++;
-            j--;
-        }
-    }
-    if (left + k  1 <= j) {
-        return quicksort(nums, left, j, k);
-    }
-    if (left + k  1 >= i) {
-        return quicksort(nums, i, right, k  (i - left));
-    }
-    return nums[j + 1];
-}
-public int kthLargestElement(int k, int[] nums) {
-    return quicksort(nums, 0, nums.length-1, k);
-}
-//方法二
-class KthLargest {
-    final PriorityQueue<Integer> q ;
-    final int k;
-    public KthLargest(int k, int[] nums) {
-        this.k = k;
-        q = new PriorityQueue<Integer>(k);
-        for(int i: nums) {
-            add(i);
-        }
-    }
 
-    public int add(int val) {
-        if(q.size() < k) {
-            q.offer(val);
-
-        }
-        else if(q.peek() < val) {
-            q.poll();
-            q.offer(val);
-        }
-        return q.peek();
-    }
-}
-```
-
-## 6. 合并排序数组 II
-
-```java
-public int[] mergeSortedArray(int[] A, int[] B) {
-    int arrLen = A.length + B.length;
-    int[] arr = new int[arrLen];
-    int i = 0;
-    int j = 0;
-    int k = 0;
-    while (k < arrLen) {
-        if (i >= A.length) {
-            arr[k] = B[j];
-            j++;
-        } else if (j >= B.length) {
-            arr[k] = A[i];
-            i++;
-        } else {
-            if (A[i] > B[j]) {
-                arr[k] = B[j];
-                j++;
-            } else {
-                arr[k] = A[i];
-                i++;
-            }
-        }
-        k++;
-   }
-    return arr;
-}
-```
-
-## 8. 旋转字符串
-```java
-//(X'Y')'=YX
-public void rotateString(char[] str, int offset) {
-    if (str == null || str.length == 0) {
-        return;
-    }
-    offset = offset % str.length;
-    reverse(str, 0, str.length - offset - 1);
-    reverse(str, str.length - offset, str.length - 1);
-    reverse(str, 0, str.length - 1);
-}
-private void reverse(char[] str, int start, int end) {
-    for (int i = start, j = end; i < j; i++, j--) {
-        char temp = str[i];
-        str[i] = str[j];
-        str[j] = temp;
-    }
-}
-```
 ## 9. PASS
 ## 10. PASS
 ## 11.
@@ -207,7 +99,7 @@ public class MinStack {
 	    return 1;
 	}
 
-## 14.二分查找  PASS
+
 
 ## 15.全排列
 	方法一：递归
@@ -388,41 +280,10 @@ public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
 }
 ```
 
-## 31. 数组划分
 
-```java
-public int partitionArray(int[] nums, int k) {
-    if (nums == null || nums.length == 0) {
-        return 0;
-    }
-    boolean flag = false;
-    int i = 0;
-    int j = nums.length - 1;
-    while (i < j) {
-        // 从右向左找，<k的
-        while (i < j && nums[j] >= k) {
-            j;
-        }
-        // 从左向右找，>=k的
-        while (i < j && nums[i] < k) {
-            i++;
-        }
-        if (i < j) {
-            int t = nums[i];
-            nums[i] = nums[j];
-            nums[j] = t;
-            flag = true;
-        }
-    }
-    if (i == nums.length){
-        return nums.length -1;
-    }
-    if (j == 0&&!flag){
-        return 0;
-    }
-    return i + 1;
-}
-```
+
+
+
 ## 32.最小子串覆盖
 ```java
 public String minWindow(String source, String target) {
@@ -498,23 +359,7 @@ public int searchMatrix(int[][] matrix, int target) {
 }
 ```
 
-## 39.恢复旋转排序数组
 
-	public void recoverRotatedSortedArray(List<Integer> nums) {
-		int temp = nums.get(0);
-		int i;
-		for (i = 0; i < nums.size(); i++) {
-			if (nums.get(i) < temp){
-				break;
-			}
-		}
-		if (i != nums.size()) {
-			for (int j = 0; j < i; j++){
-				nums.add(nums.get(j));
-			}
-			nums.subList(0, i).clear();
-		}
-	}
 
 ## 40.用栈实现队列
 	public class MyQueue {
@@ -547,121 +392,12 @@ public int searchMatrix(int[][] matrix, int target) {
 		}
 	}
 
-## 41. 最大子数组
-
-```java
-public int maxSubArray(int[] A) {
-    if (A == null || A.length == 0){
-        return 0;
-    }
-    int max = Integer.MIN_VALUE;
-    int sum = 0;
-    for (int i = 0; i < A.length; i++) {
-        sum += A[i];//sum记录从A[0]到A[i]之间的数的和
-        max = Math.max(max, sum);  //现在子数组的最大值
-        sum = Math.max(sum, 0);//如果sum小于零，则sum重新置零（放弃之前的各数和）
-    }
-    return max;
-}
-```
 
 
 
 
-## 42.最大子数组 II
-	public int maxTwoSubArrays(List<Integer> nums) {
-		if (nums == null || nums.size() == 0) {
-			return 0;
-		}
-		int[] left = new int[nums.size()];// 记录从0到当前位置(i)下的最大子数组的和
-		int[] right = new int[nums.size()];// 记录从i至size-1中最大子数组的和
-		int lsum = 0;
-		int lmax = Integer.MIN_VALUE;
-		for (int i = 0; i < nums.size(); i++) {
-			lsum += nums.get(i);
-			lmax = Math.max(lmax, lsum);
-			left[i] = lmax;
-			lsum = Math.max(lsum, 0);
-		}
-		int rsum = 0;
-		int rmax = Integer.MIN_VALUE;
-		for (int j = nums.size() - 1; j > -1; j--) {
-			rsum += nums.get(j);
-			rmax = Math.max(rmax, rsum);
-			right[j] = rmax;
-			rsum = Math.max(rsum, 0);
-		}
-		int max = Integer.MIN_VALUE;
-		for (int i = 0; i < nums.size() - 1; i++) {
-			max = Math.max(max, left[i] + right[i + 1]);
-		}
-		return max;
-	}
-## 43. 最大子数组 III
-## 44. 最小子数组
-```java
-public int minSubArray(List<Integer> nums) {
-    if (nums == null || nums.size() == 0){
-        return 0;
-	}
-    int min = Integer.MAX_VALUE;
-    int sum = 0;
-    for (int i = 0; i < nums.size(); i++) {
-        sum += nums.get(i);
-        min = Math.min(min, sum);
-        sum = Math.min(sum, 0);
-    }
-    return min;
-}
-```
-## 45. 最大子数组差
-```java
-public int maxDiffSubArrays(int[] nums) {
-	if (nums == null || nums.length == 0) {
-		return 0;
-	}
-	int[] lMax = new int[nums.length];
-	int[] lMin = new int[nums.length];
-	int lmax = Integer.MIN_VALUE;
-	int lmin = Integer.MAX_VALUE;
-	int lMaxSum = 0;
-	int lMinSum = 0;
-	for (int i = 0; i < nums.length; i++) {
-		lMaxSum += nums[i];
-		lmax = Math.max(lmax, lMaxSum);
-		lMax[i] = lmax;
-		lMaxSum = Math.max(lMaxSum, 0);
 
-		lMinSum += nums[i];
-		lmin = Math.min(lmin, lMinSum);
-		lMin[i] = lmin;
-		lMinSum = Math.min(lMinSum, 0);
-	}
-	int[] rMax = new int[nums.length];
-	int[] rMin = new int[nums.length];
-	int rmax = Integer.MIN_VALUE;
-	int rmin = Integer.MAX_VALUE;
-	int rMaxSum = 0;
-	int rMinSum = 0;
-	for (int j = nums.length - 1; j >= 0; j--) {
-		rMaxSum += nums[j];
-		rmax = Math.max(rMaxSum, rmax);
-		rMax[j] = rmax;
-		rMaxSum = Math.max(0, rMaxSum);
 
-		rMinSum += nums[j];
-		rmin = Math.min(rmin, rMinSum);
-		rMin[j] = rmin;
-		rMinSum = Math.min(rMinSum, 0);
-	}
-	int diff = 0;
-	for (int i = 0; i < nums.length - 1; i++) {
-		diff = Math.max(diff, Math.abs(lMax[i] - rMin[i + 1]));
-		diff = Math.max(diff, Math.abs(lMin[i] - rMax[i + 1]));
-	}
-	return diff;
-}
-```
 
 ## 46. 主元素
 
@@ -1063,116 +799,12 @@ public List<List<Integer>> threeSum(int[] numbers) {
 	    }
 	    return ret;
 	}
-## 62.搜索旋转排序数组
-```java
-public int search(int[] A, int target) {
-    if (A == null || A.length == 0) {
-        return 1;
-    }
 
-    int start = 0;
-    int end = A.length-1;
-    int mid;
-
-    while (start + 1 < end) {
-        mid = start + (end - start) / 2;
-        if (A[mid] == target) {
-            return mid;
-        }
-        if (A[start] < A[mid]) {
-            if (A[start] <= target && target <= A[mid]) {
-                end = mid;
-            } else {
-                start = mid;
-            }
-        } else {
-            if (A[mid] <= target && target <= A[end]) {
-                start = mid;
-            } else {
-                end = mid;
-            }
-        }
-    } 
-    if (A[start] == target) {
-        return start;
-    }
-    if (A[end] == target) {
-        return end;
-    }
-    return 1;
-}
-```
-## 63. 搜索旋转排序数组 II PASS
 ## 64. PASS
 
 
 
-## 72. 中序遍历和后序遍历树构造二叉树
-```java
-private int findPosition(int[] arr, int start, int end, int key) {
-    int i;
-    for (i = start; i <= end; i++) {
-        if (arr[i] == key) {
-            return i;
-        }
-    }
-    return -1;
-}
 
-// 后序找根，根节点就是后序遍历中的最后一位，中序找子树
-private TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] postorder, int poststart, int postend) {
-    if (instart > inend) {
-        return null;
-    }
-
-    TreeNode root = new TreeNode(postorder[postend]);
-    int position = findPosition(inorder, instart, inend, postorder[postend]);
-
-    root.left = myBuildTree(inorder, instart, position - 1, postorder, poststart, poststart + position - instart - 1);
-    root.right = myBuildTree(inorder, position + 1, inend, postorder, poststart + position - instart, postend - 1);
-    return root;
-}
-
-public TreeNode buildTree(int[] inorder, int[] postorder) {
-    if (inorder.length != postorder.length) {
-        return null;
-    }
-    return myBuildTree(inorder, 0, inorder.length - 1, postorder, 0, postorder.length - 1);
-}
-```
-## 73. 前序遍历和中序遍历树构造二叉树
-```java
-private int findPosition(int[] arr, int start, int end, int key) {
-    int i;
-    for (i = start; i <= end; i++) {
-        if (arr[i] == key) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-// 先序找根，中序找子树
-private TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] preorder, int prestart, int preend) {
-    if (instart > inend) {
-        return null;
-    }
-
-    TreeNode root = new TreeNode(preorder[prestart]);
-    int position = findPosition(inorder, instart, inend, preorder[prestart]);
-
-    root.left = myBuildTree(inorder, instart, position - 1, preorder, prestart + 1, prestart + position - instart);
-    root.right = myBuildTree(inorder, position + 1, inend, preorder, position - inend + preend + 1, preend);
-    return root;
-}
-
-public TreeNode buildTree(int[] preorder, int[] inorder) {
-    if (inorder.length != preorder.length) {
-        return null;
-    }
-    return myBuildTree(inorder, 0, inorder.length - 1, preorder, 0, preorder.length - 1);
-}
-```
 
 ## 75. 寻找峰值
 
@@ -1427,55 +1059,6 @@ public List<Integer> singleNumberIII(int[] A) {
 	}
 
 
-
-## 100. 删除排序数组中的重复数字
-
-```java
-public int removeDuplicates(int[] nums) {
-    if (nums == null || nums.length == 0)
-        return 0;
-    int t = nums[0];
-    int count = 0;
-
-    for (int i = 1; i < nums.length  count; i++) {
-        if (nums[i] == t) {
-            for (int j = i; j < nums.length  1; j++) {
-                nums[j] = nums[j + 1];
-            }
-            i;
-            count++;
-        } else {
-            t = nums[i];
-        }
-    }
-    return nums.length  count;
-}
-```
-
-## 101. 删除排序数组中的重复数字 II
-	public int removeDuplicates(int[] nums) {
-		if (nums == null || nums.length == 0)
-			return 0;
-		int t = nums[0];
-		int count = 0;
-		int c = 0;
-		for (int i = 1; i < nums.length - count; i++) {
-			if (nums[i] == t) {
-				c++;
-				if (c > 1) {
-					for (int j = i; j < nums.length - 1; j++) {
-						nums[j] = nums[j + 1];
-					}
-					i--;
-					count++;
-				}
-			} else {
-				t = nums[i];
-				c = 0;
-			}
-		}
-		return nums.length - count;
-	}
 
 
 ## 114. 不同的路径
@@ -2019,45 +1602,7 @@ private boolean isPalindrome(String s) {
 		}
 		return list;
 	}
-## 159. 寻找旋转排序数组中的最小值
-```java
-/**
-把一个排序数组先分割成两部分[first, second]，其中，first代表前面几个元素，second代表之后的元素， 例如对于数组[0, 1, 2, 4, 5, 6, 7]，可以设定first = [0, 1, 2], second = [4, 5, 6, 7]. 那么经过旋转之后，数组就变成了[second, first]，我们观察一下，这个新数组有这样两个特性：（1）second中所有元素都大于first中任意元素（2）second与first都是递增的序列
-*/
-public int findMin(int[] nums) {
-    int left = 0;
-    int right = nums.length - 1;
 
-    while (left < right && nums[left] > nums[right]) {
-         int mid = (left + right) / 2;
-        if (nums[left] < nums[mid]) { //mid指在second中，而最小值肯定在mid后面
-            left = mid + 1;
-        } else {//mid指在first中
-            right = mid;
-        }
-    }
-    return nums[left];
-}
-```
-
-## 160. 寻找旋转排序数组中的最小值（有重复数字）
-```java
-public int findMin(int[] nums) {
-    int low = 0;
-    int high = nums.length - 1;
-    while (low < high && nums[low] >= nums[high]) {
-        int mid = (low + high) / 2;
-        if (nums[low] < nums[mid]) {
-            low = mid + 1;
-        } else if (nums[low] > nums[mid]) {
-            high = mid;
-        } else {
-            low = low + 1;
-        }
-    }
-    return nums[low];
-}
-```
 
 
 
