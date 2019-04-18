@@ -160,29 +160,31 @@ private void reverse(char[] str, int start, int end) {
 ## 11.
 ## 12. 带最小值操作的栈
 
-	public class MinStack {
-	    private Stack<Integer> stack;
-	    private Stack<Integer> minStack;
-	    public MinStack() {
-	        stack = new Stack<Integer>();
-	        minStack = new Stack<Integer>();
-	    }
-	    public void push(int number) {
-	        stack.push(number);
-	        if (minStack.isEmpty()) {
-	            minStack.push(number);
-	        } else {
-	            minStack.push(Math.min(number, minStack.peek()));
-	        }
-	    }
-	    public int pop() {
-	        minStack.pop();
-	        return stack.pop();
-	    }
-	    public int min() {
-	        return minStack.peek();
-	    }
-	}
+```java
+public class MinStack {
+    private Stack<Integer> stack;
+    private Stack<Integer> minStack;
+    public MinStack() {
+        stack = new Stack<Integer>();
+        minStack = new Stack<Integer>();
+    }
+    public void push(int number) {
+        stack.push(number);
+        if (minStack.isEmpty()) {
+            minStack.push(number);
+        } else {
+            minStack.push(Math.min(number, minStack.peek()));
+        }
+    }
+    public int pop() {
+        minStack.pop();
+        return stack.pop();
+    }
+    public int min() {
+        return minStack.peek();
+    }
+}
+```
 
 ## 13. Implement strStr()
 
@@ -471,59 +473,7 @@ public String minWindow(String source, String target) {
 ## 33.
 ## 34.
 
-## 35.原地翻转全部链表
 
-```java
-public ListNode reverse(ListNode head) {
-    if(head == null){
-        return null;
-    }
-    ListNode pre = null;
-    ListNode next = null;
-
-    while(head != null){    
-        next = head.next;
-        head.next = pre;  
-        pre = head;
-        head = next;
-    }
-    return pre;
-}
-```
-
-
-## 36.翻转链表中第m个节点到第n个节点的部分
-
-```java
-public ListNode reverseBetween(ListNode head, int m, int n) {
-    ListNode p = head;
-    if (p == null)
-        return null;
-    int count = 1;
-    ListNode pAhead = p;
-    while (count < m) {
-        pAhead = p;
-        p = p.next;
-        count++;
-    }
-    ListNode pNext = p.next;
-    while (pNext != null && count < n) {
-        ListNode pNextNext = pNext.next;
-        pNext.next = p;
-        p = pNext;
-        pNext = pNextNext;
-
-        count++;
-    }
-    if (m == 1) {
-        head.next = pNext;
-        return p;
-    }
-    pAhead.next.next = pNext;
-    pAhead.next = p;
-    return head;
-}
-```
 ## 37.PASS
 ## 38.搜索二维矩阵 II
 ```java
@@ -919,27 +869,50 @@ public String reverseWords(String s) {
 }
 ```
 ## 54.PASS
-## 55.PASS
+## 两数之和-输入已排序的数组
+
+给定一个已按照**升序排列** 的有序数组，找到两个数使得它们相加之和等于目标数。
+
+```java
+public int[] twoSum(int[] nums, int target) {
+    int left = 0;
+    int right = nums.length - 1;
+    while (nums[left] + nums[right] != target) {
+        if (nums[left] + nums[right] > target) {//
+            right--;
+        }
+        if (nums[left] + nums[right] < target) {
+            left++;
+        }
+    }
+    int[] ans = new int[2];
+    ans[0] = left + 1;
+    ans[1] = right + 1;
+    return ans;
+}
+```
 ## 56. 两数之和
-	public int[] twoSum(int[] numbers, int target) {
-	    if (numbers == null || numbers.length == 0)
-	        return null;
-	    int[] index = new int[2];
-	    HashMap<Integer, Integer> map = new HashMap<>(numbers.length);
-	    for (int i = 0; i < numbers.length; i++) {
-	        int num = numbers[i];
-	        int diff = target  num;
-	        Integer val = map.get(diff);
-	        if (val != null) {
-	            index[0] = Math.min(i, val);
-	            index[1] = Math.max(i, val);
-	            return index;
-	        } else {
-	            map.put(num, i);
-	        }
-	    }
-	    return null;
-	}
+```java
+public int[] twoSum(int[] numbers, int target) {
+    if (numbers == null || numbers.length == 0)
+        return null;
+    int[] index = new int[2];
+    HashMap<Integer, Integer> map = new HashMap<>(numbers.length);
+    for (int i = 0; i < numbers.length; i++) {
+        int num = numbers[i];
+        int diff = target  num;
+        Integer val = map.get(diff);
+        if (val != null) {
+            index[0] = Math.min(i, val);
+            index[1] = Math.max(i, val);
+            return index;
+        } else {
+            map.put(num, i);
+        }
+    }
+    return null;
+}
+```
 
 ## 57. 三数之和
 	public List<List<Integer>> threeSum(int[] numbers) {
@@ -1132,36 +1105,38 @@ public TreeNode buildTree(int[] inorder, int[] postorder) {
 }
 ```
 ## 73. 前序遍历和中序遍历树构造二叉树
-	private int findPosition(int[] arr, int start, int end, int key) {
-		int i;
-		for (i = start; i <= end; i++) {
-			if (arr[i] == key) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	
-	// 先序找根，中序找子树
-	private TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] preorder, int prestart, int preend) {
-		if (instart > inend) {
-			return null;
-		}
-	
-		TreeNode root = new TreeNode(preorder[prestart]);
-		int position = findPosition(inorder, instart, inend, preorder[prestart]);
-	
-		root.left = myBuildTree(inorder, instart, position - 1, preorder, prestart + 1, prestart + position - instart);
-		root.right = myBuildTree(inorder, position + 1, inend, preorder, position - inend + preend + 1, preend);
-		return root;
-	}
-	
-	public TreeNode buildTree(int[] preorder, int[] inorder) {
-		if (inorder.length != preorder.length) {
-			return null;
-		}
-		return myBuildTree(inorder, 0, inorder.length - 1, preorder, 0, preorder.length - 1);
-	}
+```java
+private int findPosition(int[] arr, int start, int end, int key) {
+    int i;
+    for (i = start; i <= end; i++) {
+        if (arr[i] == key) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// 先序找根，中序找子树
+private TreeNode myBuildTree(int[] inorder, int instart, int inend, int[] preorder, int prestart, int preend) {
+    if (instart > inend) {
+        return null;
+    }
+
+    TreeNode root = new TreeNode(preorder[prestart]);
+    int position = findPosition(inorder, instart, inend, preorder[prestart]);
+
+    root.left = myBuildTree(inorder, instart, position - 1, preorder, prestart + 1, prestart + position - instart);
+    root.right = myBuildTree(inorder, position + 1, inend, preorder, position - inend + preend + 1, preend);
+    return root;
+}
+
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    if (inorder.length != preorder.length) {
+        return null;
+    }
+    return myBuildTree(inorder, 0, inorder.length - 1, preorder, 0, preorder.length - 1);
+}
+```
 
 ## 75. 寻找峰值
 
@@ -1370,77 +1345,9 @@ public List<Integer> singleNumberIII(int[] A) {
     return result;
 }
 ```
-## 85. 在二叉查找树中插入节点
 
-```java
-二叉排序树或者是一棵空树，或者是具有下列性质的二叉树：
-（1）若左子树不空，则左子树上所有结点的值均小于或等于它的根结点的值；
-（2）若右子树不空，则右子树上所有结点的值均大于或等于它的根结点的值；
-（3）左、右子树也分别为二叉排序树；
 
-方法一：非递归
-public TreeNode insertNode(TreeNode root, TreeNode node) {
-    if (root == null)
-        return node;
-    TreeNode tn = root;
-    TreeNode preTn = root;
-    int flag = 0;
-    while (tn != null) {
-        preTn = tn;
-        if (node.val < tn.val) {
-            flag = 1;
-            tn = tn.left;
-        } else {
-            flag = 2;
-            tn = tn.right;
-        }
-    }
-    if (flag == 1) {
-        preTn.left = node;
-    } else if (flag == 2) {
-        preTn.right = node;
-    }
-    return root;
-}
 
-方法二：递归
-public TreeNode insertNode(TreeNode root, TreeNode node) {
-    if (root == null) {
-        return node;
-    }
-    if (root.val > node.val) {
-        root.left = insertNode(root.left, node);
-    } else {
-        root.right = insertNode(root.right, node);
-    }
-    return root;
-}
-```
-## 88. Lowest Common Ancestor of a Binary Tree
-	思路:
-	1 如果A或B就在root上，那么root就是LCA。
-	2 如果左子树和右子树分别都有LCA，那么root就是LCA。
-	3 如果右子树没有LCA，左子树有，那么LCA在左子树。
-	4 如果左子树没有LCA，右子树右，那么LCA在右子树。
-	5 如果两边都没有，那么就没有。
-	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode A, TreeNode B) {
-		if (root == null || root == A || root == B) {
-			return root;
-		}
-		TreeNode left = lowestCommonAncestor(root.left, A, B);
-		TreeNode right = lowestCommonAncestor(root.right, A, B);
-	
-		if (left != null && right != null) {
-			return root;
-		}
-		if (left != null) {
-			return left;
-		}
-		if (right != null) {
-			return right;
-		}
-		return null;
-	}
 ## 90. k数和 II
 	public List<List<Integer>> kSumII(int[] A, int k, int target) {
 		List<List<Integer>> result = new ArrayList<>();
@@ -1484,109 +1391,6 @@ public TreeNode insertNode(TreeNode root, TreeNode node) {
 	}
 
 
-
-## 98.链表排序
-```java
-private ListNode findMiddle(ListNode head) {
-    ListNode slow = head, fast = head.next;
-    while (fast != null && fast.next != null) {
-        fast = fast.next.next;
-        slow = slow.next;
-    }
-    return slow;
-}    
-
-private ListNode merge(ListNode head1, ListNode head2) {
-    ListNode dummy = new ListNode(0);
-    ListNode tail = dummy;
-    while (head1 != null && head2 != null) {
-        if (head1.val < head2.val) {
-            tail.next = head1;
-            head1 = head1.next;
-        } else {
-            tail.next = head2;
-            head2 = head2.next;
-        }
-        tail = tail.next;
-    }
-    if (head1 != null) {
-        tail.next = head1;
-    } else {
-        tail.next = head2;
-    }
-
-    return dummy.next;
-}
-
-public ListNode sortList(ListNode head) {
-    if (head == null || head.next == null) {
-        return head;
-    }
-
-    ListNode mid = findMiddle(head);
-
-    ListNode right = sortList(mid.next);
-    mid.next = null;
-    ListNode left = sortList(head);
-
-    return merge(left, right);
-}
-```
-## 99. 重排链表
-
-	//快慢指针的思想找到链表中的中间节点
-	private ListNode findMiddle(ListNode head) {
-		ListNode slow = head, fast = head.next;
-		while (fast != null && fast.next != null) {
-			fast = fast.next.next;
-			slow = slow.next;
-		}
-		return slow;
-	}
-	//反转mid之后的链表
-	public ListNode reverse(ListNode head) {
-		if (head == null) {
-			return null;
-		}
-		ListNode p = head;
-		ListNode pNext = head.next;
-		while (pNext != null) {
-			ListNode pNextNext = pNext.next;
-			pNext.next = p;
-			p = pNext;
-			pNext = pNextNext;
-		}
-		head.next = null;
-		return p;
-	}
-	public void reorderList(ListNode head) {
-		if (head == null) {
-			return;
-		}
-		ListNode midNode = findMiddle(head);
-		ListNode front = head;
-		ListNode rear = reverse(midNode.next);
-		midNode.next = null;
-		int index = 0;
-		ListNode t = new ListNode(0);
-		while (front != null && rear != null) {
-			if (index % 2 == 0) {
-				t.next = front;
-				front = front.next;
-			} else {
-				t.next = rear;
-				rear = rear.next;
-			}
-			t = t.next;
-			index++;
-		}
-		if (front != null) {
-			t.next = front;
-		} else {
-			t.next = rear;
-		}
-	
-	}
 
 ## 100. 删除排序数组中的重复数字
 
@@ -1637,118 +1441,7 @@ public int removeDuplicates(int[] nums) {
 		return nums.length - count;
 	}
 
-## 102. 带环链表
-```java
-//	给定一个单链表，只给出头指针h：
-//	1、如何判断是否存在环？
-//	2、如何知道环的长度？
-//	3、如何找出环的连接点在哪里？
-//	4、带环链表的长度是多少？
-	
-//	解法：
-//	1、对于问题1，使用追赶的方法，设定两个指针slow、fast，从头指针开始，每次分别前进1步、2步。如存在环，则两者相遇；如不存在环，fast遇到NULL退出。
-//	2、对于问题2，记录下问题1的碰撞点p，slow、fast从该点开始，再次碰撞所走过的操作数就是环的长度s。
-//	3、问题3：有定理：碰撞点p到连接点的距离=头指针到连接点的距离，因此，分别从碰撞点、头指针开始走，相遇的那个点就是连接点。
-//	4、问题3中已经求出连接点距离头指针的长度，加上问题2中求出的环的长度，二者之和就是带环单链表的长度
-	
-public Boolean hasCycle(ListNode head) {
-    if (head == null || head.next == null) {
-        return false;
-    }
 
-    ListNode fast, slow;
-    fast = head.next;
-    slow = head;
-    while (fast != slow) {
-        if (fast == null || fast.next == null) {
-            return false;
-        }
-        fast = fast.next.next;
-        slow = slow.next;
-    }
-    return true;
-}
-```
-## 103. 带环链表 II
-```java
-public ListNode detectCycle(ListNode head) {
-    if (head == null || head.next == null) {
-        return null;
-    }
-    ListNode fast, slow;
-    fast = head.next;
-    slow = head;
-    while (fast != slow) {
-        if (fast == null || fast.next == null) {
-            return null;
-        }
-        fast = fast.next.next;
-        slow = slow.next;
-    }
-    while (head != fast.next) {
-        fast = fast.next;
-        head = head.next;
-    }
-    return head;
-}
-```
-## 104. Merge K Sorted Lists
-
-```java
-public ListNode mergeKLists(List<ListNode> lists) {
-    ListNode dummy = new ListNode(0);
-    if (lists.size() == 0) {
-        return dummy.next;
-    }
-    for (int i = 0; i < lists.size(); i++) {
-        if (lists.get(i) == null) {
-            lists.remove(i);
-        }
-    }
-    ListNode node = dummy;
-    while (lists.size() > 0) {
-        int index = 0;
-        ListNode minNode = lists.get(0);
-        for (int i = 0; i < lists.size(); i++) {
-            if (lists.get(i).val < minNode.val) {
-                index = i;
-                minNode = lists.get(i);
-            }
-        }
-        node.next = minNode;
-        node = minNode;
-        lists.set(index, lists.get(index).next);
-        if (lists.get(index) == null) {
-            lists.remove(index);
-        }
-    }
-    return dummy.next;
-}
-```
-
-## 112. 删除排序链表中的重复元素
-	public ListNode deleteDuplicates(ListNode head) {
-		if (head == null)
-			return null;
-		int val = head.val;
-		int count = 1;
-		ListNode node = head.next;
-		ListNode pre = head;
-		while (node != null) {
-			if (val == node.val) {
-				count++;
-				if (count > 1) {
-					pre.next = node.next;
-				}
-			} else {
-				count = 1;
-				val = node.val;
-				pre = node;
-			}
-			node = node.next;
-		}
-		return head;
-	}
 ## 114. 不同的路径
 ```java
 public int uniquePaths(int m, int n) {
@@ -2330,56 +2023,8 @@ public int findMin(int[] nums) {
 }
 ```
 
-## 166. 链表倒数第n个节点
-	ListNode nthToLast(ListNode head, int n) {
-		if (head == null || n < 1) {
-			return null;
-		}
-		//快慢指针
-		ListNode p1 = head;
-		ListNode p2 = head;
-		for (int j = 0; j < n; ++j) {
-			if (p2 == null) {
-				return null;
-			}
-			p2 = p2.next;
-		}
-		while (p2 != null) {
-			p1 = p1.next;
-			p2 = p2.next;
-		}
-		return p1;
-	}
-## 167.链表求和
 
-给出两个 **非空** 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 **逆序** 的方式存储的，并且它们的每个节点只能存储 **一位** 数字。如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
 
-```java
-public ListNode addLists(ListNode l1, ListNode l2) {
-    ListNode dummy = new ListNode(0);
-    ListNode p = dummy;
-    int num = 0;
-    while (l1 != null || l2 != null) {
-        if (l1 != null) {
-            num += l1.val;
-            l1 = l1.next;
-        }
-        if (l2 != null) {
-            num += l2.val;
-            l2 = l2.next;
-        }
-        p.next = new ListNode(num % 10);
-        num /= 10;
-        p = p.next;
-    }
-    while (num != 0) {
-        p.next = new ListNode(num % 10);
-        p = p.next;
-        num /= 10;
-    }
-    return dummy.next;
-}
-```
 ## 169. 汉诺塔
 	public List<String> towerOfHanoi(int n) {
 		List<String> list = new ArrayList();
@@ -2398,31 +2043,7 @@ public ListNode addLists(ListNode l1, ListNode l2) {
 			hanoi(n - 1, B, A, C, list);
 		}
 	}
-## 170. 旋转链表
-	public ListNode rotateRight(ListNode head, int k) {
-		if (head == null || k == 0) {
-			return head;
-		}
-		int listLen = 0;
-		Stack<ListNode> stack = new Stack();
-		ListNode p = head;
-		while (p != null) {
-			stack.push(p);
-			listLen++;
-			p = p.next;
-		}
-		k %= listLen;
-		ListNode newHead = head;
-		p = head;
-		while (k != 0) {
-			newHead = stack.pop();
-			newHead.next = p;
-			p = newHead;
-			k--;
-			stack.peek().next = null;
-		}
-		return newHead;
-	}
+
 ## 171. 乱序字符串
 	public List<String> anagrams(String[] strs) {
 		HashMap<String, ArrayList> map = new HashMap<>();
@@ -2468,117 +2089,51 @@ public ListNode addLists(ListNode l1, ListNode l2) {
 		}
 		return A.length - len;
 	}
-## 173. 链表插入排序
-	public ListNode insertionSortList(ListNode head) {
-	    ListNode newHead = new ListNode(Integer.MIN_VALUE);
-		while (head != null) {
-			ListNode p = newHead;
-			while (p.next != null) {
-				if (p.val <= head.val && p.next.val >= head.val) {
-					ListNode node = head;
-					head = head.next;
-					node.next = p.next;
-					p.next = node;
-					break;
-				}
-				p = p.next;
-			}
-			if (p.next == null) {
-				p.next = head;
-				head = head.next;
-				p.next.next = null;
-			}
-		}
-		return newHead.next;
-	}
-## 174. 删除链表中倒数第n个节点
-	public ListNode removeNthFromEnd(ListNode head, int n) {
-		if (head == null || n < 1) {
-			return null;
-		}
-		ListNode p = head;
-		for (int j = 0; j < n; j++) {
-			if (p == null) {
-				return null;
-			}
-			p = p.next;
-		}
-		ListNode pn = head;
-		ListNode pre = pn;
-		while (p != null) {
-			pre = pn;
-			pn = pn.next;
-			p = p.next;
-		}
-		if (pn == head) {
-			return head.next;
-		}else{
-			pre.next = pn.next;
-			return head;
-		}
-	}
+
+
 
 ## 176 图中两个点之间的路线 PASS
-## 177. 把排序数组转换为高度最小的二叉搜索树
+
+## 178. 图是否是树
 ```java
-public TreeNode sortedArrayToBST(int[] A) {
-	if (A == null || A.length == 0) {
-		return null;
-	}
-	TreeNode root = null;
-	root = recursion(A, 0, A.length - 1, root);
-	A = null;
-	return root;
+public boolean validTree(int n, int[][] edges) {
+    if (n == 0) {
+        return false;
+    } else if (edges.length != n - 1) {
+        return false;
+    }
+    Map<Integer, Set<Integer>> graph = initializeGraph(n, edges);
+    Queue<Integer> queue = new LinkedList<>();
+    Set<Integer> hash = new HashSet<>();
+
+    queue.offer(0);
+    hash.add(0);
+    while (!queue.isEmpty()) {
+        int node = queue.poll();
+        for (Integer neighbor : graph.get(node)) {
+            if (!hash.contains(neighbor)) {
+                hash.add(neighbor);
+                queue.offer(neighbor);
+            }
+        }
+    }
+    return (hash.size() == n);
 }
-public TreeNode recursion(int[] nums, int left, int right, TreeNode root) {
-	if (left <= right) {
-		int mid = (left + right) / 2;
-		int val = nums[mid];
-		root = new TreeNode(val);
-		root.left = recursion(nums, left, mid - 1, root.left);
-		root.right = recursion(nums, mid + 1, right, root.right);
-	}
-	return root;
+
+private Map<Integer, Set<Integer>> initializeGraph(int n, int[][] edges) {
+    Map<Integer, Set<Integer>> graph = new HashMap<>();
+    for (int i = 0; i < n; i++) {
+        graph.put(i, new HashSet<Integer>());
+    }
+    for (int i = 0; i < edges.length; i++) {
+        int u = edges[i][0];
+        int v = edges[i][1];
+        graph.get(u).add(v);
+        graph.get(v).add(u);
+    }
+    return graph;
 }
 ```
-## 178. 图是否是树
-	public boolean validTree(int n, int[][] edges) {
-		if (n == 0) {
-			return false;
-		} else if (edges.length != n - 1) {
-			return false;
-		}
-		Map<Integer, Set<Integer>> graph = initializeGraph(n, edges);
-		Queue<Integer> queue = new LinkedList<>();
-		Set<Integer> hash = new HashSet<>();
-	
-		queue.offer(0);
-		hash.add(0);
-		while (!queue.isEmpty()) {
-			int node = queue.poll();
-			for (Integer neighbor : graph.get(node)) {
-				if (!hash.contains(neighbor)) {
-					hash.add(neighbor);
-					queue.offer(neighbor);
-				}
-			}
-		}
-		return (hash.size() == n);
-	}
-	
-	private Map<Integer, Set<Integer>> initializeGraph(int n, int[][] edges) {
-		Map<Integer, Set<Integer>> graph = new HashMap<>();
-		for (int i = 0; i < n; i++) {
-			graph.put(i, new HashSet<Integer>());
-		}
-		for (int i = 0; i < edges.length; i++) {
-			int u = edges[i][0];
-			int v = edges[i][1];
-			graph.get(u).add(v);
-			graph.get(v).add(u);
-		}
-		return graph;
-	}
 ## 181. 将整数A转换为B
 	public int bitSwapRequired(int a, int b) {
 		int count = 0;
