@@ -78,29 +78,6 @@ public class MinStack {
 }
 ```
 
-## 13. Implement strStr()
-
-	public int strStr(String source, String target) {
-	    if (source == null || target == null) {
-	        return 1;
-	    }
-	    for (int i = 0; i < source.length()  target.length() + 1; i++) {
-	        int j = 0;
-	        while (j < target.length()) {
-	            if (source.charAt(i + j) != target.charAt(j)) {
-	                break;
-	            }
-	            j++;
-	        }
-	        if (j == target.length()) {
-	            return i;
-	        }
-	    }
-	    return 1;
-	}
-
-
-
 ## 15.全排列
 	方法一：递归
 	public List<List<Integer>> permute(int[] nums) {
@@ -248,9 +225,7 @@ public class MinStack {
 	}
 ## 19.20.21.22.23.PASS
 ## 24.LFU缓存
-## 25.26.27.PASS
-## 28.
-## 29.
+## 
 
 ## 30. 插入区间
 
@@ -284,58 +259,6 @@ public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
 
 
 
-## 32.最小子串覆盖
-```java
-public String minWindow(String source, String target) {
-    String result = "";
-    if ("".equals(source) || "".equals(target)) {
-        return result;
-    }
-    int[] sHash = new int[128];
-    int[] tHash = new int[128];
-    for (char ch : target.toCharArray()) {
-        tHash[ch]++;
-    }
-    int count = 0;
-    int start = 0;
-    int min = Integer.MAX_VALUE;
-    int minS = -1;
-    int end = source.length() - 1;
-    for (int i = 0; i < source.length(); i++) {
-        sHash[source.charAt(i)]++; // 计算每一个字符出现的频数
-        if (sHash[source.charAt(i)] <= tHash[source.charAt(i)]) { // 判断该字符是否在target中出现过
-            count++;
-        }
-        if (count == target.length()) { // 找到了一个子串
-            // 为了让start指向第一个符合要求的字符。
-            while (start < i && (sHash[source.charAt(start)] > tHash[source.charAt(start)])) {
-                sHash[source.charAt(start)]--;// 还原无效的字符的频数
-                start++;
-            }
-            if (i - start < min) {
-                min = i - start;
-                System.out.println(min);
-                end = i;
-                minS = start;
-            }
-            // 继续寻找下一个子串，start加1，复原freq在start位置的频数，count减1。
-            // 因为答案的子串中的字母与target不需要具有相同的顺序
-            sHash[source.charAt(start)]--;
-            start++;
-            count--;
-        }
-    }
-    if (minS == -1) {
-        return "";
-    }
-    return source.substring(minS, end + 1);
-}
-```
-## 33.
-## 34.
-
-
-## 37.PASS
 ## 38.搜索二维矩阵 II
 ```java
 public int searchMatrix(int[][] matrix, int target) {
@@ -1208,41 +1131,42 @@ public int jump(int[] A) {
 		return step;
 	}
 ## 123.单词搜索
-	public boolean find(char[][] board, char[] str, int x, int y, int k) {
-		if (k >= str.length) {
-			return true;
-		}
-		if (x < 0 || x >= board.length || y < 0 || y >= board[0].length || board[x][y] != str[k]) {
-			return false;
-		}
-	
-		board[x][y] = '#';
-		boolean rst = find(board, str, x - 1, y, k + 1) || find(board, str, x, y - 1, k + 1) || find(board, str, x + 1, y, k + 1) || find(board, str, x, y + 1, k + 1);
-		board[x][y] = str[k];
-		return rst;
-	}
-	
-	public boolean exist(char[][] board, String word) {
-		if (board == null || board.length == 0) {
-			return false;
-		}
-		if (word.length() == 0) {
-			return true;
-		}
-		char[] str = word.toCharArray();
-		boolean ret = false;
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				if (board[i][j] == str[0]) {
-					ret = find(board, str, i, j, 0);
-					if (ret) {// 返回值真直接返回，返回值假时继续执行
-						return ret;
-					}
-				}
-			}
-		}
-		return ret;
-	}
+```java
+public boolean find(char[][] board, char[] str, int x, int y, int k) {
+    if (k >= str.length) {
+        return true;
+    }
+    if (x < 0 || x >= board.length || y < 0 || y >= board[0].length || board[x][y] != str[k]) {
+        return false;
+    }
+    board[x][y] = '#';
+    boolean rst = find(board, str, x - 1, y, k + 1) || find(board, str, x, y - 1, k + 1) || find(board, str, x + 1, y, k + 1) || find(board, str, x, y + 1, k + 1);
+    board[x][y] = str[k];
+    return rst;
+}
+
+public boolean exist(char[][] board, String word) {
+    if (board == null || board.length == 0) {
+        return false;
+    }
+    if (word.length() == 0) {
+        return true;
+    }
+    char[] str = word.toCharArray();
+    boolean ret = false;
+    for (int i = 0; i < board.length; i++) {
+        for (int j = 0; j < board[i].length; j++) {
+            if (board[i][j] == str[0]) {
+                ret = find(board, str, i, j, 0);
+                if (ret) {// 返回值真直接返回，返回值假时继续执行
+                    return ret;
+                }
+            }
+        }
+    }
+    return ret;
+}
+```
 ## 124.最长连续序列
 	public int longestConsecutive(int[] num) {
 		Set<Integer> set = new HashSet<>();
@@ -1392,64 +1316,7 @@ private boolean isPalindrome(String s) {
     return true;
 }
 ```
-## 138. 子数组之和
-	public List<Integer> subarraySum(int[] nums) {
-		List<Integer> pos = new ArrayList<Integer>(2);
-		if (nums == null || nums.length == 0) {
-			return pos;
-		}
-		int sum = 0;
-		Map<Integer, Integer> map = new HashMap<>();
-		map.put(sum, -1);
-		for (int i = 0; i < nums.length; i++) {
-			// 从某个位置出发，到i的sum与到j的sum相等，说明从i+1到j的sum为零。
-			sum += nums[i];
-			if (map.containsKey(sum)) {
-				pos.add(map.get(sum) + 1);
-				pos.add(i);
-				break;
-			}
-			map.put(sum, i);
-		}
-		return pos;
-	}
-## 139. 最接近零的子数组和
-	class Pair {
-		int sum;
-		int index;
-	
-		public Pair(int s, int i) {
-			sum = s;
-			index = i;
-		}
-	}
-	
-	public int[] subarraySumClosest(int[] nums) {
-		int[] result = new int[2];
-		if (nums == null || nums.length <= 1) {
-			return result;
-		}
-		//sum[i]表示0到i位置的和，那么求sum[j]-sum[i]就可以求得子数组和
-		Pair[] sums = new Pair[nums.length + 1];
-		sums[0] = new Pair(0, 0);
-		for (int i = 1; i < sums.length; i++) {
-			sums[i] = new Pair(sums[i - 1].sum + nums[i - 1], i);
-		}
-		Arrays.sort(sums, new Comparator<Pair>() {
-			public int compare(Pair a, Pair b) {
-				return a.sum - b.sum;
-			}
-		});
-		int ans = Integer.MAX_VALUE;
-		for (int i = 1; i < sums.length; i++) {
-			if (ans > sums[i].sum - sums[i - 1].sum) {
-				ans = sums[i].sum - sums[i - 1].sum;
-				result[0] = Math.min(sums[i].index, sums[i - 1].index);
-				result[1] = Math.max(sums[i].index, sums[i - 1].index) - 1;
-			}
-		}
-		return result;
-	}
+
 ## 140. 快速幂
 	思路：每次二分n，然后递归的去求a^n % b。可以分为两种情况： 
 	1.如果n为奇数可以转化为(a^(n/2)*a^(n/2)*a)%b
@@ -1491,34 +1358,7 @@ private boolean isPalindrome(String s) {
 	    }
 	    return (n & (n-1)) == 0;
 	}
-## 144. 交错正负数
-	public void rerange(int[] A) {
-		if (A == null || A.length <= 1) {
-			return;
-		}
-		Arrays.sort(A);
-		int i, j;
-		if (A.length % 2 == 0) {
-			i = 1;
-			j = A.length - 2;
-		} else if (A[A.length / 2] > 0) {
-			i = 0;
-			j = A.length - 2;
-		} else {
-			i = 1;
-			j = A.length - 1;
-		}
-		while (i < j) {
-			swap(A, i, j);
-			i += 2;
-			j -= 2;
-		}
-	}
-	private void swap(int[] A, int i, int j) {
-		int t = A[i];
-		A[i] = A[j];
-		A[j] = t;
-	}
+
 
 ## 152. 组合
 	public List<List<Integer>> combine(int n, int k) {
@@ -1625,30 +1465,7 @@ private boolean isPalindrome(String s) {
 		}
 	}
 
-## 171. 乱序字符串
-	public List<String> anagrams(String[] strs) {
-		HashMap<String, ArrayList> map = new HashMap<>();
-		ArrayList<String> ret = new ArrayList<String>();
-		for (int i = 0; i < strs.length; i++) {
-			char[] ch = strs[i].toCharArray();
-			Arrays.sort(ch);
-			String str = String.valueOf(ch);
-	
-			ArrayList<String> list = map.get(str);
-			if (list == null) {
-				list = new ArrayList<>();
-			}
-			list.add(strs[i]);
-			map.put(str, list);
-		}
-		for (String str : map.keySet()) {
-			ArrayList<String> list = map.get(str);
-			if (list.size() != 1) {
-				ret.addAll(list);
-			}
-		}
-		return ret;
-	}
+
 ## 172. 删除元素
 	public int removeElement(int[] A, int elem) {
 		if (A == null || A.length == 0) {

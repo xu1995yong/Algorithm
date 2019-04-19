@@ -64,43 +64,7 @@ public String removeKdigits(String num, int k) {
 }
 ```
 
-## 6. Z 字形变换
 
-将一个给定字符串根据给定的行数，以从上往下、从左到右进行 Z 字形排列。
-比如输入字符串为 `"LEETCODEISHIRING"` 行数为 3 时，排列如下：
-
-```
-L   C   I   R
-E T O E S I I G
-E   D   H   N
-```
-之后，你的输出需要从左往右逐行读取，产生一个新的字符串，比如：`"LCIRETOESIIGEDHN"`
-
-```java
-public String convert(String s, int numRows) {
-    if (numRows == 1) return s;
-    List<StringBuilder> rows = new ArrayList<>();
-    for (int i = 0; i < Math.min(numRows, s.length()); i++) {
-        rows.add(new StringBuilder());
-    }
-
-    int curRow = 0;
-    boolean goingDown = false;
-    for (char c : s.toCharArray()) {//将每个字符添加到所属行的stringbuilder中
-        rows.get(curRow).append(c);
-        if (curRow == 0 || curRow == numRows - 1) {
-            goingDown = !goingDown;
-        }
-        curRow += goingDown ? 1 : -1;
-    }
-
-    StringBuilder ret = new StringBuilder();
-    for (StringBuilder row : rows) {
-        ret.append(row);
-    }
-    return ret.toString();
-}
-```
 
 ## 11. 盛最多水的容器
 
@@ -167,33 +131,7 @@ public String multiply(String num1, String num2) {
 }
 ```
 
-## 49. 字母异位词分组
 
-给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
-
-```java
-public List<List<String>> groupAnagrams(String[] strs) {
-    Map<String, List> ans = new HashMap<>();
-    int[] count = new int[26];
-    for (String s : strs) {
-        Arrays.fill(count, 0);
-        for (char c : s.toCharArray()) {
-            count[c - 'a']++;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 26; i++) {
-            sb.append('#');
-            sb.append(count[i]);
-        }
-        String key = sb.toString();
-        if (!ans.containsKey(key)) {
-            ans.put(key, new ArrayList());
-        }
-        ans.get(key).add(s);
-    }
-    return new ArrayList(ans.values());
-}
-```
 
 ## 88.  合并两个有序数组
 
