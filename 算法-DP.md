@@ -14,6 +14,46 @@ public int climbStairs(int n) {
 }
 ```
 
+## 剪绳子
+
+给你一根长度为n的绳子，请把绳子剪成m段 (m和n都是整数，n>1并且m>1)每段绳子的长度记为k[0],k[1],…,k[m].请问k[0]*k[1]*…*k[m]可能的最大乘积是多少？例如，当绳子的长度为8时，我们把它剪成长度分别为2,3,3的三段，此时得到的最大乘积是18.
+
+```java
+public int matProductAfterCutting(int length) {
+    if (length < 2) {
+        return 0;
+    }
+    if (length == 2) {
+        return 1;
+    }
+    if (length == 3) {
+        return 2;
+    }
+    // 将最优解存储在数组中
+    int[] products = new int[length + 1];
+    // 数组中第i个元素表示把长度为i的绳子剪成若干段之后的乘积的最大值
+    products[0] = 0;
+    products[1] = 1;
+    products[2] = 2;
+    products[3] = 3;
+
+    for (int i = 4; i <= length; i++) {
+        int max = 0;
+        // 求出所有可能的f(j)*f(i-j)并比较出他们的最大值
+        for (int j = 1; j <= i / 2; j++) {
+            int product = products[j] * products[i - j];
+            if (product > max) {
+                max = product;
+            }
+            products[i] = max;
+        }
+    }
+    return products[length];
+}
+```
+
+
+
 ## 等差数列划分
 
 ```java
@@ -69,8 +109,6 @@ public boolean canPartition(int[] nums) {
     return dp[nums.length - 1][capacity];
 }
 ```
-
-
 
 ## 买卖股票的最佳时机
 

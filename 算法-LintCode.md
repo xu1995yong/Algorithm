@@ -79,34 +79,36 @@ public class MinStack {
 ```
 
 ## 15.全排列
-	方法一：递归
-	public List<List<Integer>> permute(int[] nums) {
-		List<List<Integer>> results = new ArrayList<>();
-		if (nums == null) {
-			return results;
-		}
-		boolean[] visited = new boolean[nums.length];
-		dfs(nums, visited, new ArrayList<Integer>(), results);
+```java
+方法一：递归
+public List<List<Integer>> permute(int[] nums) {
+	List<List<Integer>> results = new ArrayList<>();
+	if (nums == null) {
 		return results;
 	}
-	
-	private void dfs(int[] nums, boolean[] visited, List<Integer> permutation, List<List<Integer>> results) {
-		if (nums.length == permutation.size()) {
-			results.add(new ArrayList<Integer>(permutation));
-			return;
-		}
-		for (int i = 0; i < nums.length; i++) {
-			if (visited[i]) {
-				continue;
-			}
-			permutation.add(nums[i]);
-			visited[i] = true;
-			dfs(nums, visited, permutation, results);
-			visited[i] = false;
-			permutation.remove(permutation.size() - 1);
-		}
+	boolean[] visited = new boolean[nums.length];
+	dfs(nums, visited, new ArrayList<Integer>(), results);
+	return results;
+}
+
+private void dfs(int[] nums, boolean[] visited, List<Integer> permutation, List<List<Integer>> results) {
+	if (nums.length == permutation.size()) {
+		results.add(new ArrayList<Integer>(permutation));
+		return;
 	}
-	方法二：非递归，可用52题中的字典序法，循环求下一个排列
+	for (int i = 0; i < nums.length; i++) {
+		if (visited[i]) {
+			continue;
+		}
+		permutation.add(nums[i]);
+		visited[i] = true;
+		dfs(nums, visited, permutation, results);
+		visited[i] = false;
+		permutation.remove(permutation.size() - 1);
+	}
+}
+方法二：非递归，可用52题中的字典序法，循环求下一个排列
+```
 ## 16. 带重复元素的排列
 	public List<List<Integer>> permuteUnique(int[] nums) {
 		List<List<Integer>> results = new ArrayList<>();
@@ -139,90 +141,8 @@ public class MinStack {
 			permutation.remove(permutation.size() - 1);
 		}
 	}
-## 17.子集
 
-	方法一：
-	 public List<List<Integer>> subsets(int[] nums) {
-	    List<List<Integer>> results = new LinkedList<>();
-	    if (nums == null) {
-	        return results; 
-	    }
-	    Arrays.sort(nums);
-	    Queue<List<Integer>> queue = new LinkedList<>();
-	    queue.offer(new LinkedList<Integer>());
-	    while (!queue.isEmpty()) {
-	        List<Integer> subset = queue.poll();
-	        results.add(subset);    
-	        for (int i = 0; i < nums.length; i++) {
-	            if (subset.size() == 0 || subset.get(subset.size() - 1) < nums[i]) {
-	                List<Integer> nextSubset = new LinkedList<Integer>(subset);
-	                nextSubset.add(nums[i]);
-	                queue.offer(nextSubset);
-	            }
-	        }
-	    }
-	    return results;
-	}
-	方法二：
-	public List<List<Integer>> subsets(int[] nums) {
-		List<List<Integer>> results = new LinkedList<>();
-		if (nums == null) {
-			return results;
-		}
-		Arrays.sort(nums);
-		int setNum = 1 << nums.length;// 一共有2^n种可能
-		for (int i = 0; i < setNum; i++) {
-			List<Integer> item = new ArrayList();
-			for (int j = 0; j < nums.length; j++) {
-				if ((i & (1 << j)) != 0) {// 有没有第j个数
-					item.add(nums[j]);
-				}
-			}
-			results.add(item);
-		}
-		return results;
-	}
-	方法三：
-	public List<List<Integer>> subsets(int[] nums) {
-		List<List<Integer>> results = new LinkedList<>();
-		if (nums == null) {
-			return results;
-		}
-		Arrays.sort(nums);
-		List<Integer> item = new ArrayList();
-		helper(nums, 0, item, results);
-		return results;
-	}
-	public void helper(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> results) {
-		results.add(new ArrayList<Integer>(subset));
-		for (int i = startIndex; i < nums.length; i++) {
-			subset.add(nums[i]);
-			helper(nums, i + 1, subset, results);
-			subset.remove(subset.size() - 1);
-		}
-	}
-## 18.Subsets II
-	public List<List<Integer>> subsetsWithDup(int[] nums) {
-		List<List<Integer>> results = new LinkedList<>();
-		if (nums == null) {
-			return results;
-		}
-		Arrays.sort(nums);
-		List<Integer> item = new ArrayList();
-		helper(nums, 0, item, results);
-		return results;
-	}
-	public void helper(int[] nums, int startIndex, List<Integer> subset, List<List<Integer>> results) {
-		results.add(new ArrayList<Integer>(subset));
-		for (int i = startIndex; i < nums.length; i++) {
-			if (i != startIndex && nums[i] == nums[i - 1]) {
-				continue;
-			}
-			subset.add(nums[i]);
-			helper(nums, i + 1, subset, results);
-			subset.remove(subset.size() - 1);
-		}
-	}
+
 ## 19.20.21.22.23.PASS
 ## 24.LFU缓存
 ## 
@@ -259,28 +179,7 @@ public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
 
 
 
-## 38.搜索二维矩阵 II
-```java
-public int searchMatrix(int[][] matrix, int target) {
-    int row = matrix.length - 1;
-    int column = 0;
-    int ans = 0;
-    while (row >= 0 && column < matrix[0].length) {
-        if (target == matrix[row][column]) {
-            ans++;
-            row--;
-            column++;
-            continue;
-        }
-        if (target < matrix[row][column]) {
-            row--;
-        } else {
-            column++;
-        }
-    }
-    return ans;
-}
-```
+
 
 
 
@@ -651,109 +550,8 @@ public List<List<Integer>> threeSum(int[] numbers) {
 	        return start;
 	    }
 	}
-## 76. 最长上升子序列
-	public int longestIncreasingSubsequence(int[] nums) {
-		if (nums == null || nums.length == 0) {
-			return 0;
-		}
-		// dp[i]中存储以nums[i]为结尾的最长上升子序列的长度
-		int[] dp = new int[nums.length];
-		int max = 0;
-		for (int i = 0; i < nums.length; i++) {
-			dp[i] = 1;
-			// 遍历i之前的数组，看Nums[i]能否加入到以nums[j]为结尾的最长上升子序列中
-			for (int j = 0; j < i; j++) {
-				// 如果nums[i] > nums[j]，nums[i]可以加入到以nums[j]为结尾的最长上升子序列中
-				if (nums[j] < nums[i]) {
-					dp[i] = Math.max(dp[i], dp[j] + 1);
-				}
-			}
-			max = Math.max(dp[i], max);
-		}
-		return max;
-	}
-	//求最长公共子序列
-	public int longestIncreasingSubsequence(int[] nums) {
-		if (nums == null || nums.length == 0) {
-			return 0;
-		}
-		int index = 0;
-		int[] pre = new int[nums.length];// 存储前缀
-		// dp[i]中存储以nums[i]为结尾的最长上升子序列的长度
-		int[] dp = new int[nums.length];
-		int max = 0;
-		for (int i = 0; i < nums.length; i++) {
-			dp[i] = 1;
-			pre[i] = -1;
-			// 遍历i之前的数组，看nums[i]能否加入到以nums[j]为结尾的最长上升子序列中
-			for (int j = 0; j < i; j++) {
-				// 如果nums[i] > nums[j]，nums[i]可以加入到以nums[j]为结尾的最长上升子序列中
-				if (nums[j] < nums[i] && dp[i] < dp[j] + 1) {
-					dp[i] = dp[j] + 1;
-					pre[i] = j;
-				}
-			}
-			if (dp[i] > max) {
-				max = dp[i];
-				index = i;
-			}
-		}
-		List<Integer> list = new ArrayList();
-		while (index >= 0) {
-			list.add(nums[index]);
-			index = pre[index];
-		}
-		Collections.reverse(list);
-		return max;
-	}
-## 77.最长公共子序列
-```java
-public int longestCommonSubsequence(String A, String B) {
-    if(A.length==0||B.length==0){
-        return 0;
-    }
-	int f[][] = new int[A.length() + 1][B.length() + 1];
-	for (int i = 1; i <= A.length(); i++) {
-		for (int j = 1; j <= B.length(); j++) {
-			f[i][j] = Math.max(f[i - 1][j], f[i][j - 1]);
-			if (A.charAt(i - 1) == B.charAt(j - 1)) {
-				f[i][j] = f[i - 1][j - 1] + 1;
-			}
-		}
-	}
-	return f[A.length()][B.length()];
-}
-```
-## 79.最长公共子串
-```java
-//算法思路：
-//1、把两个字符串分别以行和列组成一个二维矩阵。
-//2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。
-//3、通过查找出值为1的最长对角线就能找到最长公共子串。
-public int longestCommonSubstring(String A, String B) {
-	if (A == null && B != null || A != null && B == null) {
-		return 0;
-	} else if (A.equals(B)) {
-		return A.length();
-	}
-	int m = A.length();
-	int n = B.length();
-	int max = 0;
-	int[][] len = new int[m + 1][n + 1];
-	for (int i = 0; i < m; i++) {
-		for (int j = 0; j < n; j++) {
-			if (A.charAt(i) == B.charAt(j)) {
-				len[i + 1][j + 1] = len[i][j] + 1;
-			} else {
-				len[i + 1][j + 1] = 0;
-			}
-			max = Math.max(max, len[i + 1][j + 1]);
-		}
-	}
 
-	return max;
-}
-```
+
 ## 81.数据流的中位数
 ```java
 public int[] medianII(int[] nums) {
@@ -1123,85 +921,10 @@ public boolean exist(char[][] board, String word) {
 			}
 		}
 	}
-## 136.分割回文串
-```java
-public List<List<String>> partition(String s) {
-    List<List<String>> results = new ArrayList<>();
-    if (s == null || s.length() == 0) {
-        return results;
-    }
-    List<String> item = new ArrayList<String>();
-    dfs(s, 0, item, results);
-    return results;
-}
 
-private void dfs(String s, int startIndex, List<String> item, List<List<String>> results) {
-    if (startIndex == s.length()) {
-        results.add(new ArrayList<String>(item));
-        return;
-    }
-    for (int i = startIndex; i < s.length(); i++) {
-        String subString = s.substring(startIndex, i + 1);
-        if (!isPalindrome(subString)) {
-            continue;
-        }
-        item.add(subString);
-        dfs(s, i + 1, item, results);
-        item.remove(item.size() - 1);
-    }
-}
 
-private boolean isPalindrome(String s) {
-    for (int i = 0, j = s.length() - 1; i < j; i++, j--) {
-        if (s.charAt(i) != s.charAt(j)) {
-            return false;
-        }
-    }
-    return true;
-}
-```
 
-## 140. 快速幂
-	思路：每次二分n，然后递归的去求a^n % b。可以分为两种情况： 
-	1.如果n为奇数可以转化为(a^(n/2)*a^(n/2)*a)%b
-	2.如果n为偶数可以转化为(a^(n/2)*a^(n/2)) %b
-	取模运算的乘法法则： (a * b) % p = (a % p * b % p) % p
-	而且a^1 = a , a^0=1，这样我们的实际的时间复杂度是O(log(n))。
-	public int fastPower(int a, int b, int n) {
-		if (n == 0) {
-			return 1 % b;
-		} else if (n == 1) {
-			return a % b;
-		}
-		int result = fastPower(a, b, n / 2);
-		if (n % 2 == 1) {
-			result = (result * result % b) * a % b;
-		} else {
-			result = result * result % b;
-		}
-		return (int) result;
-	}
-## 141. x的平方根
-	public int sqrt(int x) {
-		int left = 0;
-		int right = x;
-		while (left <= right) {
-			int mid = (left + right) / 2;
-			if (Math.pow(mid, 2) > x) {
-				right = mid - 1;
-			} else {
-				left = mid + 1;
-			}
-		}
-		return left - 1;
-	}
-## 142. O(1)时间检测2的幂次
-	public boolean checkPowerOf2(int n) {
-	     if (n <= 0) {
-	        return false;
-	    }
-	    return (n & (n-1)) == 0;
-	}
+
 
 
 ## 152. 组合
@@ -1310,27 +1033,6 @@ private boolean isPalindrome(String s) {
 	}
 
 
-## 172. 删除元素
-	public int removeElement(int[] A, int elem) {
-		if (A == null || A.length == 0) {
-			return 0;
-		}
-		int count = 0;
-		int len = 0;
-		for (int i = 0; i < A.length; i++) {
-			if (A[i] == elem) {
-				len++;
-				count++;
-			} else if (count > 0 && count < A.length) {
-				for (int j = i; j < A.length; j++) {
-					A[j - count] = A[j];
-				}
-				i -= count;
-				count = 0;
-			}
-		}
-		return A.length - len;
-	}
 
 
 
@@ -1400,32 +1102,34 @@ private Map<Integer, Set<Integer>> initializeGraph(int n, int[][] edges) {
 		return sb.toString();
 	}
 ## 184. 最大数
-	private class NumComparator implements Comparator<String> {
-		@Override
-		//该Str1按字典顺序小于参数字符串Str2，则返回值小于0；若Str1按字典顺序大于参数字符串Str2，则返回值大于0
-		//如果没有字符不同，compareTo 返回这两个字符串长度的差
-		public int compare(String s1, String s2) {
-			return (s2 + s1).compareTo(s1 + s2);
-		}
-	}
-	public String largestNumber(int[] nums) {
-		if (nums == null || nums.length == 0) {
-			return "";
-		}
-		String[] strArr = new String[nums.length];
-		for (int i = 0; i < nums.length; i++) {
-			strArr[i] = String.valueOf(nums[i]);
-		}
-		Arrays.parallelSort(strArr, new NumComparator());
-		StringBuilder sb = new StringBuilder(String.valueOf(0));
-		for (int i = 0; i < strArr.length; i++) {
-			if (sb.length() == 1 && !strArr[i].equals("0")) {
-				continue;
-			}
-			sb.append(strArr[i]);
-		}
-		return sb.length() > 1 ? sb.toString().substring(1) : sb.toString();
-	}
+```java
+private class NumComparator implements Comparator<String> {
+    @Override
+    //该Str1按字典顺序小于参数字符串Str2，则返回值小于0；若Str1按字典顺序大于参数字符串Str2，则返回值大于0
+    //如果没有字符不同，compareTo 返回这两个字符串长度的差
+    public int compare(String s1, String s2) {
+        return (s2 + s1).compareTo(s1 + s2);
+    }
+}
+public String largestNumber(int[] nums) {
+    if (nums == null || nums.length == 0) {
+        return "";
+    }
+    String[] strArr = new String[nums.length];
+    for (int i = 0; i < nums.length; i++) {
+        strArr[i] = String.valueOf(nums[i]);
+    }
+    Arrays.parallelSort(strArr, new NumComparator());
+    StringBuilder sb = new StringBuilder(String.valueOf(0));
+    for (int i = 0; i < strArr.length; i++) {
+        if (sb.length() == 1 && !strArr[i].equals("0")) {
+            continue;
+        }
+        sb.append(strArr[i]);
+    }
+    return sb.length() > 1 ? sb.toString().substring(1) : sb.toString();
+}
+```
 ## 189. 丢失的第一个正整数
 	public int firstMissingPositive(int[] A) {
 	    if (A == null) {
@@ -1471,38 +1175,9 @@ private Map<Integer, Set<Integer>> initializeGraph(int n, int[][] edges) {
 		}
 		return nums.length;
 	}
-## 375. 克隆二叉树
-	public TreeNode cloneTree(TreeNode root) {
-	    if (root == null)
-	        return null;
-	    TreeNode clone_root = new TreeNode(root.val);
-	    clone_root.left = cloneTree(root.left);
-	    clone_root.right = cloneTree(root.right);
-	    return clone_rot;
-	}
 
-## 384. 最长无重复字符的子串
 
-给定一个字符串，请你找出其中不含有重复字符的 **最长子串** 的长度。
 
-```java
-public int lengthOfLongestSubstring(String s) {
-    Map<Character, Integer> map = new HashMap<Character, Integer>();
-    int longest = -1;
-    for (int i = 0; i < s.length(); i++) {
-        char ch = s.charAt(i);
-        if (map.containsKey(ch)) {
-            longest = Math.max(map.size(), longest);
-            i = map.get(ch); //回退
-            map.clear();
-        } else {
-            map.put(ch, i);
-        }
-    }
-    longest = Math.max(map.size(), longest);
-    return longest;
-}
-```
 
 ## 433. 岛屿的个数
 	public void DFS(boolean[][] grid, boolean[][] mark, int x, int y) {
