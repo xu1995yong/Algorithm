@@ -319,89 +319,6 @@ public int searchMatrix(int[][] matrix, int target) {
 
 
 
-
-
-
-## 46. 主元素
-
-```java
-public int majorityNumber(List<Integer> nums) {
-    int currentMajor = 0;
-    int count = 0;
-    for(Integer num : nums) {
-        if(count == 0) {
-            currentMajor = num;
-        }
-        if(num == currentMajor) {
-            count++;
-        } else {
-            count--;
-        }
-    }
-    return currentMajor;
-}
-```
-
-## 47. 主元素Ⅱ
-
-```java
-public int majorityNumber(List<Integer> nums) {
-    int majorityNumber1 = 0;
-    int majorityNumber2 = 0;
-    int count1 = 0;
-    int count2 = 0;
-    for (int i = 0; i < nums.size(); i++) {
-        if (majorityNumber1 == nums.get(i)) {
-            count1++;
-        } else if (majorityNumber2 == nums.get(i)) {
-            count2++;
-        } else if (count1 == 0) {
-            majorityNumber1 = nums.get(i);
-            count1++;
-        } else if (count2 == 0) {
-            majorityNumber2 = nums.get(i);
-            count2++;
-        } else {
-            count1--;
-            count2--;
-        }
-    }
-    count1 = count2 = 0;
-    for (int i = 0; i < nums.size(); i++) {
-        if (majorityNumber1 == nums.get(i)) {
-            count1++;
-        } else if (majorityNumber2 == nums.get(i)) {
-            count2++;
-        }
-    }
-    return count1 > count2 ? majorityNumber1 : majorityNumber2;
-}
-```
-
-## 48.
-## 49.字符大小写排序
-```java
-public void sortLetters(char[] chars) {
-	int i = 0;
-	int j = chars.length - 1;
-	while (i <= j) {
-		while (i <= j && Character.isLowerCase(chars[i])){
-			i++;
-		}
-		while (i <= j && Character.isUpperCase(chars[j])){
-			j--;
-		}
-		if (i <= j) {
-			char tmp = chars[i];
-			chars[i] = chars[j];
-			chars[j] = tmp;
-			i++;
-			j--;
-		}
-	}
-	return;
-}
-```
 ## 50.PASS
 ## 51.上一个排列
 	//字典序法
@@ -483,21 +400,6 @@ public void sortLetters(char[] chars) {
 	}
 ## 53. 翻转字符串
 ```java
-//使用JAVA API
-public String reverseWords(String s) {
-	    if (s.equals(""))
-	        return s;
-	    String regex = "\\s+";
-	    String[] strArr = s.trim().split(regex);
-	
-	    String newStr = "";
-	    for (int i = strArr.length  1; i > 1; i) {
-	        newStr += strArr[i];
-	        newStr += " ";
-	    }
-    return newStr.trim();
-}
-//不使用JAVA API
 public String reverseWords(String s) {
     if (s.equals(""))
         return s;
@@ -877,65 +779,7 @@ private void addNums(PriorityQueue<Integer> maxHeap, PriorityQueue<Integer> minH
     }
 }
 ```
-## 82. 落单的数
-	方法一：
-	public int singleNumber(int[] A) {
-	    if (A == null || A.length == 0){
-	        return 0;
-		}
-	    int xor = 0;
-	    for (int i = 0; i < A.length; i++) {
-	        xor ^= A[i];
-	    }
-	    return xor;
-	}
-	方法二：参见83题
-## 83.落单的数 II
-	思路:利用位运算，int有32位，用一个长度为32的数组bit记录A中每个数字的每一位中1出现的次数，如果这个数字出现3次，则与这个数字对应的每一位上的1也出现三次。最后将数组每一位均对3取余，最后得到的就是要求的数字。
-	public int singleNumberII(int[] A) {
-		if (A == null || A.length == 0) {
-			return 0;
-		}
-		int val = 0;
-		int[] bit = new int[32];
-		for (int i = 0; i < 32; i++) {
-			for (int j = 0; j < A.length; j++) {
-				bit[i] += (A[j] >> i) & 1;//不能让1右移i位，只能是A[j]左移i位
-			}
-			bit[i] %= 3;
-			val |= (bit[i] << i);
-		}
-		return val;
-	}
-## 84. 落单的数 III
-```java
-/*
-思路:对于2*n+1个数字用异或就可以，参见博客LintCode-82.落单的数，而在此题将所有数异或之后得到的是两个落单的数的异或结果，没办法将结果拆分成两个落单的数。但因为两个落单数不同，所以肯定存在某个位k，使得两落单数在第k位上一个为0另一个为1（怎么找到这个k? 找异或结果中1出现的位置即可）。只需找到最小的这个k，然后将在k位上为0的所有数做异或得出其中一个落单的数，在k位为1的所有数也做另外的异或，得出另一个落单的数，这样最终可以得到两个落单的数。
-*/
-public List<Integer> singleNumberIII(int[] A) {
-    ArrayList<Integer> result = new ArrayList<Integer>(2);
-    if (A == null || A.length == 0) {
-        return result;
-    }
-    int xor = 0;
-    for (int i = 0; i < A.length; i++) {
-        xor ^= A[i];
-    }
-    int lastBit = xor - (xor & (xor - 1));
-    int v1 = 0;
-    int v2 = 0;
-    for (int i = 0; i < A.length; i++) {
-        if ((lastBit & A[i]) == 0) {
-            v1 ^= A[i];
-        } else {
-            v2 ^= A[i];
-        }
-    }
-    result.add(v1);
-    result.add(v2);
-    return result;
-}
-```
+
 
 
 
