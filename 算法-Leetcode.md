@@ -133,28 +133,7 @@ public String multiply(String num1, String num2) {
 
 
 
-## 88.  合并两个有序数组
-
-```java
-public void merge(int[] nums1, int m, int[] nums2, int n) {
-    int j = 0;
-    for (int i = 0; i < nums1.length && j < nums2.length; i++) {
-        if (nums1[i] > nums2[j]) {
-            for (int k = m; k > i; k--) {
-                nums1[k] = nums1[k - 1];
-            }
-            nums1[i] = nums2[j];
-            j++;
-            m++;
-        }
-    }
-    while (j != nums2.length) {
-        nums1[m] = nums2[j];
-        m++;
-        j++;
-    }
-}
-```
+ 
 
 ## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
 

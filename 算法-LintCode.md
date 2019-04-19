@@ -726,10 +726,10 @@ public int longestCommonSubsequence(String A, String B) {
 ```
 ## 79.最长公共子串
 ```java
-算法思路：
-1、把两个字符串分别以行和列组成一个二维矩阵。
-2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。
-3、通过查找出值为1的最长对角线就能找到最长公共子串。
+//算法思路：
+//1、把两个字符串分别以行和列组成一个二维矩阵。
+//2、比较二维矩阵中每个点对应行列字符中否相等，相等的话值设置为1，否则设置为0。
+//3、通过查找出值为1的最长对角线就能找到最长公共子串。
 public int longestCommonSubstring(String A, String B) {
 	if (A == null && B != null || A != null && B == null) {
 		return 0;
