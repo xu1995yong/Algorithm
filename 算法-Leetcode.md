@@ -135,22 +135,7 @@ public String multiply(String num1, String num2) {
 
  
 
-## [55. 跳跃游戏](https://leetcode-cn.com/problems/jump-game/)
 
-```java
-public boolean canJump(int[] nums) {
-    int right = nums.length - 1;
-    int i = right;
-    while (i >= 0) {
-        if (nums[i] >= right - i) {    //如果当前下标可以跳转到right，就更新right的值
-            right = i;
-        }
-        i--;
-    }
-    if (right != 0) return false;    //当整个循环结束时，right没有到达0,说明不可抵达
-    return true;
-}
-```
 
 
 

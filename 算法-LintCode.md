@@ -4,15 +4,17 @@
 >   a&b就是a和b里都是1的那些位置，a&b<<1 就是进位之后的结果。所以：a + b =(a ^ b) + (a & b << 1)。     
 >   令a' = a ^ b, b' = (a & b) << 1。可以知道，这个过程是在模拟加法的运算过程，进位不可能一直持续，所以b最终会变为0。因此重复做上述操作就可以求得a + b的值。
 
-	public int aplusb(int a, int b) {
-	    while (b != 0) {
-	        int _a = a ^ b;
-	        int _b = (a & b) << 1;
-	        a = _a;
-	        b = _b;
-	    }
-	    return a;
-	}
+```java
+public int aplusb(int a, int b) {
+    while (b != 0) {
+        int _a = a ^ b;
+        int _b = (a & b) << 1;
+        a = _a;
+        b = _b;
+    }
+    return a;
+}
+```
 
 ## 2. 尾部的零
 
@@ -532,24 +534,26 @@ public List<List<Integer>> threeSum(int[] numbers) {
 
 ## 75. 寻找峰值
 
-	public int findPeak(int[] A) {
-	    int start = 1, end = A.length  2;  
-	    while (start + 1 < end) {
-	        int mid = (start + end) / 2;
-	        if (A[mid] < A[mid  1]) {
-	            end = mid;
-	        } else if (A[mid] < A[mid + 1]) {
-	            start = mid;
-	        } else {
-	            end = mid;
-	        }
-	    }
-	    if (A[start] < A[end]) {
-	        return end;
-	    } else {
-	        return start;
-	    }
-	}
+```java
+public int findPeak(int[] A) {
+    int start = 1, end = A.length  2;  
+    while (start + 1 < end) {
+        int mid = (start + end) / 2;
+        if (A[mid] < A[mid  1]) {
+            end = mid;
+        } else if (A[mid] < A[mid + 1]) {
+            start = mid;
+        } else {
+            end = mid;
+        }
+    }
+    if (A[start] < A[end]) {
+        return end;
+    } else {
+        return start;
+    }
+}
+```
 
 
 ## 81.数据流的中位数
@@ -684,7 +688,30 @@ public int uniquePathsWithObstacles(int[][] obstacleGrid) {
     return sum[m - 1][n - 1];
 }
 ```
+
+## 116. 跳跃游戏
+
+### 给出一个非负整数数组，你最初定位在数组的第一个位置。数组中的每个元素代表你在那个位置可以跳跃的最大长度。判断你是否能到达数组的最后一个位置。
+
+```java
+public boolean canJump(int[] nums) {
+    int right = nums.length - 1;
+    int i = right;
+    while (i >= 0) {
+        if (nums[i] >= right - i) {    //如果当前下标可以跳转到right，就更新right的值
+            right = i;
+        }
+        i--;
+    }
+    if (right != 0) return false;    //当整个循环结束时，right没有到达0,说明不可抵达
+    return true;
+}
+```
+
 ## 117. 跳跃游戏 II
+
+### 给出一个非负整数数组，你最初定位在数组的第一个位置。数组中的每个元素代表你在那个位置可以跳跃的最大长度。你的目标是使用最少的跳跃次数到达数组的最后一个位置。
+
 ```java
 public int jump(int[] A) {
     if (A.length <= 1) {
@@ -835,37 +862,39 @@ public boolean exist(char[][] board, String word) {
 		return maxLen;
 	}
 ## 127.拓扑排序
-	public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
-		ArrayList<DirectedGraphNode> result = new ArrayList<DirectedGraphNode>();
-		Map<DirectedGraphNode, Integer> map = new HashMap<>();
-		for (DirectedGraphNode node : graph) {
-			for (DirectedGraphNode neighbor : node.neighbors) {
-				if (map.containsKey(neighbor)) {
-					map.put(neighbor, map.get(neighbor) + 1);
-				} else {
-					map.put(neighbor, 1);
-				}
+```java
+public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+	ArrayList<DirectedGraphNode> result = new ArrayList<DirectedGraphNode>();
+	Map<DirectedGraphNode, Integer> map = new HashMap<>();
+	for (DirectedGraphNode node : graph) {
+		for (DirectedGraphNode neighbor : node.neighbors) {
+			if (map.containsKey(neighbor)) {
+				map.put(neighbor, map.get(neighbor) + 1);
+			} else {
+				map.put(neighbor, 1);
 			}
 		}
-		Queue<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
-		for (DirectedGraphNode node : graph) {
-			if (!map.containsKey(node)) {
-				queue.offer(node);
-				result.add(node);
-			}
-		}
-		while (!queue.isEmpty()) {
-			DirectedGraphNode node = queue.poll();
-			for (DirectedGraphNode n : node.neighbors) {
-				map.put(n, map.get(n) - 1);
-				if (map.get(n) == 0) {
-					result.add(n);
-					queue.offer(n);
-				}
-			}
-		}
-		return result;
 	}
+	Queue<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+	for (DirectedGraphNode node : graph) {
+		if (!map.containsKey(node)) {
+			queue.offer(node);
+			result.add(node);
+		}
+	}
+	while (!queue.isEmpty()) {
+		DirectedGraphNode node = queue.poll();
+		for (DirectedGraphNode n : node.neighbors) {
+			map.put(n, map.get(n) - 1);
+			if (map.get(n) == 0) {
+				result.add(n);
+				queue.offer(n);
+			}
+		}
+	}
+	return result;
+}
+```
 ## 129. 重哈希
 		public ListNode[] rehashing(ListNode[] hashTable) {
 		if (hashTable == null || hashTable.length == 0) {
