@@ -49,38 +49,12 @@ public int aplusb(int a, int b) {
 
 
 
-## 9. PASS
-## 10. PASS
-## 11.
-## 12. 带最小值操作的栈
-
-```java
-public class MinStack {
-    private Stack<Integer> stack;
-    private Stack<Integer> minStack;
-    public MinStack() {
-        stack = new Stack<Integer>();
-        minStack = new Stack<Integer>();
-    }
-    public void push(int number) {
-        stack.push(number);
-        if (minStack.isEmpty()) {
-            minStack.push(number);
-        } else {
-            minStack.push(Math.min(number, minStack.peek()));
-        }
-    }
-    public int pop() {
-        minStack.pop();
-        return stack.pop();
-    }
-    public int min() {
-        return minStack.peek();
-    }
-}
-```
+  
 
 ## 15.全排列
+
+给定一个数字列表，返回其所有可能的排列。
+
 ```java
 方法一：递归
 public List<List<Integer>> permute(int[] nums) {
@@ -112,44 +86,51 @@ private void dfs(int[] nums, boolean[] visited, List<Integer> permutation, List<
 方法二：非递归，可用52题中的字典序法，循环求下一个排列
 ```
 ## 16. 带重复元素的排列
-	public List<List<Integer>> permuteUnique(int[] nums) {
-		List<List<Integer>> results = new ArrayList<>();
-		if (nums == null) {
-			return results;
-		}
-		Arrays.sort(nums);
-		boolean[] visited = new boolean[nums.length];
-		dfs(nums, visited, new ArrayList<Integer>(), results);
-	
-		return results;
-	}
-	
-	private void dfs(int[] nums, boolean[] visited, List<Integer> permutation, List<List<Integer>> results) {
-	
-		if (nums.length == permutation.size()) {
-			results.add(new ArrayList<Integer>(permutation));
-			return;
-		}
-		for (int i = 0; i < nums.length; i++) {
-			if (visited[i]) {
-				continue;
-			} else if (i != 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {// 回溯的时候
-				continue;
-			}
-			permutation.add(nums[i]);
-			visited[i] = true;
-			dfs(nums, visited, permutation, results);
-			visited[i] = false;
-			permutation.remove(permutation.size() - 1);
-		}
-	}
+
+给出一个具有重复数字的列表，找出列表所有**不同**的排列。
+
+```java
+public List<List<Integer>> permuteUnique(int[] nums) {
+    List<List<Integer>> results = new ArrayList<>();
+    if (nums == null) {
+        return results;
+    }
+    Arrays.sort(nums);
+    boolean[] visited = new boolean[nums.length];
+    dfs(nums, visited, new ArrayList<Integer>(), results);
+
+    return results;
+}
+
+private void dfs(int[] nums, boolean[] visited, List<Integer> permutation, List<List<Integer>> results) {
+
+    if (nums.length == permutation.size()) {
+        results.add(new ArrayList<Integer>(permutation));
+        return;
+    }
+    for (int i = 0; i < nums.length; i++) {
+        if (visited[i]) {
+            continue;
+        } else if (i != 0 && nums[i] == nums[i - 1] && !visited[i - 1]) {// 回溯的时候
+            continue;
+        }
+        permutation.add(nums[i]);
+        visited[i] = true;
+        dfs(nums, visited, permutation, results);
+        visited[i] = false;
+        permutation.remove(permutation.size() - 1);
+    }
+}
+```
 
 
 ## 19.20.21.22.23.PASS
 ## 24.LFU缓存
-## 
+
 
 ## 30. 插入区间
+
+给出一个**无重叠的**按照区间起始端点排序的区间列表。在列表中插入一个新的区间，你要确保列表中的区间仍然有序且**不重叠**（如果有必要的话，可以合并区间）。
 
 ```java
 public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
@@ -185,149 +166,149 @@ public List<Interval> insert(List<Interval> intervals, Interval newInterval) {
 
 
 
-## 40.用栈实现队列
-	public class MyQueue {
-		private Stack<Integer> stack1;
-		private Stack<Integer> stack2;
-	
-		public MyQueue() {
-		   stack1 = new Stack<Integer>();
-		   stack2 = new Stack<Integer>();
-		}
-		private void stack2ToStack1(){
-			while(! stack2.isEmpty()){
-				stack1.push(stack2.pop());
-			}
-		}
-		public void push(int element) {
-			stack2.push(element);
-		}
-		public int pop() {
-			if(stack1.empty() == true){
-				this.stack2ToStack1();
-			}
-			return stack1.pop();
-		}
-		public int top() {
-			if(stack1.empty() == true){
-				this.stack2ToStack1();
-			}
-			return stack1.peek();
-		}
-	}
+## 50.数组剔除元素后的乘积
 
+给定一个整数数组A。
+定义`B[i] = A[0] * ... * A[i-1] * A[i+1] * ... * A[n-1]`， 计算B的时候请不要使用除法。请输出B。
 
+```java
+//分两次循环
+//第一次记录数组从后往前的累乘结果，f[i]代表i位之后所有元素的乘积
+//第二次循环，从左往右，跳过 i 左侧累乘，右侧直接乘以f[i + 1]
+public ArrayList<Long> productExcludeItself(ArrayList<Integer> A) {
+    int len = A.size();
+    ArrayList<Long> B = new  ArrayList<Long>();
+    long[] f = new long[len];
 
+    long tmp = 1;
+    long now = 1;
+    f[len-1] = A.get(len-1);
+    for (int i = len-2; i >= 0; --i){
+        f[i] = A.get(i);
+        f[i] = f[i] * f[i+1];
+    }
 
+    for (int i = 0; i < len; ++i) {
+        now = tmp;
+        if(i+1<len)
+            B.add( now * f[i+1] );
+        else
+            B.add( now );
+        now = A.get(i);
+        tmp = tmp * now;
 
-## 50.PASS
+    }
+    return B;
+}
+```
+
 ## 51.上一个排列
-	//字典序法
-	public void swap(List<Integer> nums, int i, int j) {
-		int t1 = nums.get(i);
-		int t2 = nums.get(j);
-		nums.set(i, t2);
-		nums.set(j, t1);
-	}
-	public void reverse(List<Integer> nums, int i, int j) {
-		while (i < j) {
-			swap(nums, i, j);
-			i++;
-			j--;
-		}
-	}
-	public List<Integer> previousPermuation(List<Integer> nums) {
-		if (Objects.isNull(nums) || nums.size() <= 1) {
-			return nums;
-		}
-		// 从右至左找第一个降序的两个元素。A[i]>A[i+1]
-		int i = nums.size() - 2;
-		while (i >= 0 && nums.get(i) <= nums.get(i + 1)) {
-			i--;
-		}
-		if (i < 0) {
-			Collections.sort(nums);
-			reverse(nums, 0, nums.size() - 1);
-			return nums;
-		}
-		// 从右至i，找到第一个比A[i]小的元素A[j]，交换A[i]和A[j]的位置
-		int j = nums.size() - 1;
-		while (j > i && nums.get(j) >= nums.get(i)) {
-			j--;
-		}
-		swap(nums, i, j);
-		// 反转i+1到最后的元素
-		reverse(nums, i + 1, nums.size() - 1);
-		for (int num : nums)
-			System.out.println(num);
-		return nums;
-	}
+
+给定一个整数数组来表示排列，找出其上一个排列。
+
+```java
+//字典序法
+public void swap(List<Integer> nums, int i, int j) {
+    int t1 = nums.get(i);
+    int t2 = nums.get(j);
+    nums.set(i, t2);
+    nums.set(j, t1);
+}
+public void reverse(List<Integer> nums, int i, int j) {
+    while (i < j) {
+        swap(nums, i, j);
+        i++;
+        j--;
+    }
+}
+public List<Integer> previousPermuation(List<Integer> nums) {
+    if (Objects.isNull(nums) || nums.size() <= 1) {
+        return nums;
+    }
+    // 从右至左找第一个降序的两个元素。A[i]>A[i+1]
+    int i = nums.size() - 2;
+    while (i >= 0 && nums.get(i) <= nums.get(i + 1)) {
+        i--;
+    }
+    if (i < 0) {
+        Collections.sort(nums);
+        reverse(nums, 0, nums.size() - 1);
+        return nums;
+    }
+    // 从右至i，找到第一个比A[i]小的元素A[j]，交换A[i]和A[j]的位置
+    int j = nums.size() - 1;
+    while (j > i && nums.get(j) >= nums.get(i)) {
+        j--;
+    }
+    swap(nums, i, j);
+    // 反转i+1到最后的元素
+    reverse(nums, i + 1, nums.size() - 1);
+    for (int num : nums)
+        System.out.println(num);
+    return nums;
+}
+```
 ## 52.下一个排列
-	//字典序法
-	public void swap(int[] nums, int i, int j) {
-		int temp = nums[i];
-		nums[i] = nums[j];
-		nums[j] = temp;
-	}
-	public void reverse(int[] nums, int i, int j) {
-		while (i < j) {
-			swap(nums, i, j);
-			i++;
-			j--;
-		}
-	}
-	public int[] nextPermutation(int[] nums) {
-		if (Objects.isNull(nums) || nums.length <= 1) {
-			return nums;
-		}
-		// 从右至左找第一个升序的两个元素。A[i]<A[i+1]
-		int i = nums.length - 2;
-		while (i >= 0 && nums[i] >= nums[i + 1]) {
-			i--;
-		}
-		if (i < 0) {
-			Arrays.sort(nums);
-			return nums;
-		}
-		// 从右至i，找到第一个比A[i]大的元素A[j]，交换A[i]和A[j]的位置
-		int j = nums.length - 1;
-		while (j > i && nums[j] <= nums[i]) {
-			j--;
-		}
-		swap(nums, i, j);
-		// 反转i+1到最后的元素
-		reverse(nums, i + 1, nums.length - 1);
-		return nums;
-	}
+
+给定一个整数数组来表示排列，找出其之后的一个排列。
+
+```java
+//字典序法
+public void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+public void reverse(int[] nums, int i, int j) {
+    while (i < j) {
+        swap(nums, i, j);
+        i++;
+        j--;
+    }
+}
+public int[] nextPermutation(int[] nums) {
+    if (Objects.isNull(nums) || nums.length <= 1) {
+        return nums;
+    }
+    // 从右至左找第一个升序的两个元素。A[i]<A[i+1]
+    int i = nums.length - 2;
+    while (i >= 0 && nums[i] >= nums[i + 1]) {
+        i--;
+    }
+    if (i < 0) {
+        Arrays.sort(nums);
+        return nums;
+    }
+    // 从右至i，找到第一个比A[i]大的元素A[j]，交换A[i]和A[j]的位置
+    int j = nums.length - 1;
+    while (j > i && nums[j] <= nums[i]) {
+        j--;
+    }
+    swap(nums, i, j);
+    // 反转i+1到最后的元素
+    reverse(nums, i + 1, nums.length - 1);
+    return nums;
+}
+```
 ## 53. 翻转字符串
+
+给定一个字符串，逐个翻转字符串中的每个单词。
+
 ```java
 public String reverseWords(String s) {
-    if (s.equals(""))
-        return s;
-    String newStr = "";
-    int subEnd = 1;
-    boolean flag = false;
-    for (int i = s.length()  1; i > 1; i) {
-        char c = s.charAt(i);
-        if (c != ' ' && !flag) {
-            subEnd = i;
-            flag = true;
-        }
-        if (c == ' ' && flag) {
-            for (int j = i + 1; j <= subEnd; j++) {
-                newStr += s.charAt(j);
+    //按照空格将s切分
+    String[] array = s.split(" ");
+    StringBuilder sb = new StringBuilder();
+    //从后往前遍历array，在sb中插入单词
+    for(int i = array.length - 1; i >= 0; i--){
+        if(!array[i].equals("")) {
+            if (sb.length() > 0) {
+                sb.append(" ");
             }
-            flag = false;
-            newStr += " ";
-        } else if (flag && i == 0) {
-            for (int j = i; j <= subEnd; j++) {
-                newStr += s.charAt(j);
-            }
-            flag = false;
-            newStr += " ";
+            sb.append(array[i]);
         }
     }
-    return newStr.trim();
+    return sb.toString();
 }
 ```
 ## 54.PASS
@@ -354,6 +335,9 @@ public int[] twoSum(int[] nums, int target) {
 }
 ```
 ## 56. 两数之和
+
+给一个整数数组，找到两个数使得他们的和等于一个给定的数 *target*。并返回这两个数的下标, 
+
 ```java
 public int[] twoSum(int[] numbers, int target) {
     if (numbers == null || numbers.length == 0)
@@ -837,30 +821,32 @@ public boolean exist(char[][] board, String word) {
 }
 ```
 ## 124.最长连续序列
-	public int longestConsecutive(int[] num) {
-		Set<Integer> set = new HashSet<>();
-		for (int item : num) {
-			set.add(item);
-		}
-		int maxLen = 0;
-		for (int item : num) {
-			if (set.contains(item)) {
-				set.remove(item);
-				int left = item - 1;
-				int right = item + 1;
-				while (set.contains(left)) {
-					set.remove(left);
-					left--;
-				}
-				while (set.contains(right)) {
-					set.remove(right);
-					right++;
-				}
-				maxLen = Math.max(maxLen, right - left - 1);
-			}
-		}
-		return maxLen;
+```java
+public int longestConsecutive(int[] num) {
+	Set<Integer> set = new HashSet<>();
+	for (int item : num) {
+		set.add(item);
 	}
+	int maxLen = 0;
+	for (int item : num) {
+		if (set.contains(item)) {
+			set.remove(item);
+			int left = item - 1;
+			int right = item + 1;
+			while (set.contains(left)) {
+				set.remove(left);
+				left--;
+			}
+			while (set.contains(right)) {
+				set.remove(right);
+				right++;
+			}
+			maxLen = Math.max(maxLen, right - left - 1);
+		}
+	}
+	return maxLen;
+}
+```
 ## 127.拓扑排序
 ```java
 public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
@@ -1012,58 +998,58 @@ public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) 
 		}
 	}
 ## 156.合并区间
-	private class IntervalComparator implements Comparator<Interval> {
-		@Override
-		public int compare(Interval a, Interval b) {
-			return a.start - b.start;
-		}
-	}
-	
-	public List<Interval> merge(List<Interval> intervals) {
-		if (intervals == null || intervals.size() <= 1) {
-			return intervals;
-		}
-		List<Interval> list = new ArrayList<>();
-		Collections.sort(intervals, new IntervalComparator());
-	
-		list.add(intervals.get(0));
-		for (int i = 1; i < intervals.size(); i++) {
-			Interval pre = list.get(list.size() - 1);
-			Interval curr = intervals.get(i);
-			if (curr.start > pre.end) {
-				list.add(curr);
-			} else if (curr.start <= pre.end && curr.end > pre.end) {
-				list.get(list.size() - 1).end = curr.end;
-			}
-		}
-		return list;
-	}
+```java
+private class IntervalComparator implements Comparator<Interval> {
+    @Override
+    public int compare(Interval a, Interval b) {
+        return a.start - b.start;
+    }
+}
+
+public List<Interval> merge(List<Interval> intervals) {
+    if (intervals == null || intervals.size() <= 1) {
+        return intervals;
+    }
+    List<Interval> list = new ArrayList<>();
+    Collections.sort(intervals, new IntervalComparator());
+
+    list.add(intervals.get(0));
+    for (int i = 1; i < intervals.size(); i++) {
+        Interval pre = list.get(list.size() - 1);
+        Interval curr = intervals.get(i);
+        if (curr.start > pre.end) {
+            list.add(curr);
+        } else if (curr.start <= pre.end && curr.end > pre.end) {
+            list.get(list.size() - 1).end = curr.end;
+        }
+    }
+    return list;
+}
+```
 
 
 
 
 ## 169. 汉诺塔
-	public List<String> towerOfHanoi(int n) {
-		List<String> list = new ArrayList();
-		if (n <= 0) {
-			return list;
-		}
-		hanoi(n, 'A', 'B', 'C', list);
-		return list;
-	}
-	void hanoi(int n, char A, char B, char C, List<String> list) {
-		if (n == 1) {
-			list.add("from " + A + " to " + C);
-		} else {
-			hanoi(n - 1, A, C, B, list);
-			list.add("from " + A + " to " + C);
-			hanoi(n - 1, B, A, C, list);
-		}
-	}
-
-
-
-
+```java
+public List<String> towerOfHanoi(int n) {
+    List<String> list = new ArrayList();
+    if (n <= 0) {
+        return list;
+    }
+    hanoi(n, 'A', 'B', 'C', list);
+    return list;
+}
+void hanoi(int n, char A, char B, char C, List<String> list) {
+    if (n == 1) {
+        list.add("from " + A + " to " + C);
+    } else {
+        hanoi(n - 1, A, C, B, list);
+        list.add("from " + A + " to " + C);
+        hanoi(n - 1, B, A, C, list);
+    }
+}
+```
 
 ## 176 图中两个点之间的路线 PASS
 
